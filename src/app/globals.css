@@ -1,26 +1,29 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
+/* add light mode colors here */
+/* :root {
+  --text-primary: #ffffff;
   --foreground: #171717;
-}
+} */
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-theme: var(--theme);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --text-primary: #E8EDDF;
+    --text-secondary: #CFDBD5;
+    --background: #242423;
+    --theme: #F5CB5C;
   }
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-primary);
+  font-family: "roboto", sans-serif;
 }
