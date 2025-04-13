@@ -32,7 +32,7 @@ export const ThoughtItem = ({ title, date, url }: ThoughtItemProps) => {
 
   return (
     <Link
-      className="flex items-start justify-between w-full group text-base text-primary/80 hover:text-primary transition-colors duration-300 border-transparent border-b border-solid hover:border-secondary/20 py-5"
+      className="flex items-start justify-between w-full group text-base text-primary/80 hover:text-primary transition-colors duration-300 border-transparent border-b border-solid hover:border-secondary/20 py-5 space-x-5"
       href={url}
       target={isExternal ? "_blank" : "_self"}
       rel={isExternal ? "noopener noreferrer" : undefined}

@@ -15,10 +15,10 @@ const NavLink = ({ href, label }: { href: string; label: string }) => {
 
 export const Header = () => {
     return (
-        <div className="flex flex-col items-end space-y-4">
+        <div className="flex md:flex-col items-end md:space-y-4 space-x-4 md:space-x-0">
             <NavLink href="/" label="about" />
             <NavLink href="/thoughts" label="thoughts" />
-            <NavLink href="/work" label="work" />
+            {/* <NavLink href="/work" label="work" /> */}
         </div>
     )
 }
