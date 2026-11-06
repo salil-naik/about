@@ -1,15 +1,11 @@
-"use client";
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-
 const NavLink = ({ href, label }: { href: string; label: string }) => {
-    const pathname = usePathname()
+    const pathname = window.location.pathname
     const isActive = pathname === href
 
     return (
-        <Link href={href} className={`text-primary text-base transition-opacity duration-300 ${isActive ? 'opacity-100 font-medium' : 'opacity-50 font-normal'} hover:opacity-100`}>
+        <a href={href} className={`text-primary text-base transition-opacity duration-300 ${isActive ? 'opacity-100 font-medium' : 'opacity-50 font-normal'} hover:opacity-100`}>
             {label}
-        </Link>
+        </a>
     )
 }
 

@@ -1,5 +1,5 @@
-import { ThoughtItem } from "components/components/ThoughtItem";
-import { externalData } from "components/thoughts/externalData";
+import { ThoughtItem } from "../components/ThoughtItem";
+import { externalData } from "../thoughts/externalData";
 
 export default function Thoughts() {
   return (

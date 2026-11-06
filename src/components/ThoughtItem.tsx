@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export interface ThoughtItemProps {
   title: string;
   date: string; // YYYY/MM/DD format
@@ -31,7 +29,7 @@ export const ThoughtItem = ({ title, date, url }: ThoughtItemProps) => {
   };
 
   return (
-    <Link
+    <a
       className="flex items-start justify-between w-full group text-base text-primary/80 hover:text-primary transition-colors duration-300 border-transparent border-b border-solid hover:border-secondary/20 py-5 space-x-5"
       href={url}
       target={isExternal ? "_blank" : "_self"}
@@ -42,6 +40,6 @@ export const ThoughtItem = ({ title, date, url }: ThoughtItemProps) => {
         <span>{formatDate(date)}</span>
         {isExternal && <img src="/external.svg" className="size-5" />}
       </div>
-    </Link>
+    </a>
   );
 };

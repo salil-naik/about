@@ -1,4 +1,4 @@
-import { ThoughtItemProps } from "components/components/ThoughtItem";
+import type { ThoughtItemProps } from "../components/ThoughtItem";
 
 export const externalData: ThoughtItemProps[] = [
   {

@@ -1,0 +1,52 @@
+.life-scene {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100svh;
+  min-height: 480px;
+  overflow: hidden;
+  background: #54b9f3;
+}
+
+.life-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  pointer-events: none;
+}
+
+.life-sky {
+  background-image: url("/life/sky-mountains.png");
+}
+
+.life-meadow {
+  background-image: url("/life/meadow.png");
+  transform: translateY(16%);
+}
+
+.life-trees {
+  background-image: url("/life/trees.png");
+  transform: translateY(6%);
+}
+
+@media (max-width: 600px) {
+  .life-meadow {
+    top: auto;
+    bottom: -5%;
+    height: 70%;
+    transform: none;
+  }
+
+  .life-trees {
+    top: auto;
+    bottom: -3%;
+    height: min(67vw, 330px);
+    background-size: contain;
+    background-position: center bottom;
+    transform: none;
+  }
+}

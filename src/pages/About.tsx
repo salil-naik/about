@@ -1,4 +1,4 @@
-import { TextLink } from "components/components/TextLink";
+import { TextLink } from "../components/TextLink";
 
 export default function Home() {
   return (
