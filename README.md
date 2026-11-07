@@ -16,6 +16,6 @@ npm start
 
 Available pages: `/`, `/thoughts`, and `/life`.
 
-`/life` is the interactive Painterly world. The earlier studies are at `/life/crayon` and `/life/canvas`.
+`/life` is the interactive Painterly world.
 
 Regenerate its animated foreground with `bash scripts/generate_painterly_foreground_gif.sh` and its nature audio with `python3 scripts/generate_painterly_ambience.py`.

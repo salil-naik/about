@@ -19,20 +19,6 @@
   pointer-events: none;
 }
 
-.life-sky {
-  background-image: url("/life/sky-mountains.png");
-}
-
-.life-meadow {
-  background-image: url("/life/meadow.png");
-  transform: translateY(16%);
-}
-
-.life-trees {
-  background-image: url("/life/trees.png");
-  transform: translateY(6%);
-}
-
 .life-painterly {
   background: #ad9d8c;
 }
@@ -99,6 +85,46 @@
 
 .life-painterly[data-phase="returning"] .life-painterly-under-tree {
   transition-duration: 350ms, 500ms;
+}
+
+.life-intro {
+  position: absolute;
+  z-index: 5;
+  top: clamp(85px, 13vh, 170px);
+  left: 50%;
+  width: min(1050px, calc(100% - 48px));
+  color: #ffe58d;
+  pointer-events: none;
+  text-align: center;
+  text-shadow: 0 3px 3px rgba(72, 52, 47, 0.45), 0 12px 35px rgba(68, 44, 34, 0.4);
+  transform: translateX(-50%);
+  transition: opacity 280ms ease, transform 350ms ease;
+}
+
+.life-painterly:not([data-phase="overview"]) .life-intro {
+  opacity: 0;
+  transform: translate(-50%, -12px);
+}
+
+.life-intro-kicker {
+  display: block;
+  margin-bottom: 12px;
+  color: #fff8dd;
+  font: italic 400 clamp(17px, 2vw, 28px)/1.2 Georgia, serif;
+  letter-spacing: 0.01em;
+}
+
+.life-intro h1 {
+  margin: 0;
+  font: 600 clamp(58px, 7.5vw, 142px)/0.91 Georgia, serif;
+  letter-spacing: -0.065em;
+}
+
+.life-intro p {
+  margin: 20px 0 0;
+  color: #fff9e8;
+  font: 400 clamp(14px, 1.15vw, 19px)/1.45 "Roboto", sans-serif;
+  letter-spacing: 0.03em;
 }
 
 .life-tree-spot {
@@ -317,46 +343,6 @@
   to { transform: rotate(360deg); }
 }
 
-.life-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.life-mode-switch {
-  position: absolute;
-  z-index: 10;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 3px;
-  padding: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.75);
-  box-shadow: 0 4px 24px rgba(40, 69, 103, 0.12);
-  backdrop-filter: blur(12px);
-  font: 500 13px/1 "Roboto", sans-serif;
-}
-
-.life-mode-switch a {
-  padding: 9px 13px;
-  border-radius: 999px;
-  color: #30506e;
-  text-decoration: none;
-  transition: background 150ms ease, color 150ms ease;
-}
-
-.life-mode-switch a:hover,
-.life-mode-switch a:focus-visible {
-  background: rgba(255, 255, 255, 0.85);
-}
-
-.life-mode-switch a[aria-current="page"] {
-  background: #245c88;
-  color: #fff;
-}
-
 @media (max-width: 600px) {
   .life-painterly-distant,
   .life-painterly-midground,
@@ -379,8 +365,28 @@
   }
 
   .life-return {
-    top: 62px;
+    top: 12px;
     left: 12px;
+  }
+
+  .life-intro {
+    top: 72px;
+    width: calc(100% - 32px);
+  }
+
+  .life-intro-kicker {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+
+  .life-intro h1 {
+    font-size: clamp(47px, 12vw, 64px);
+  }
+
+  .life-intro p {
+    max-width: 260px;
+    margin: 16px auto 0;
+    font-size: 13px;
   }
 
   .life-place-caption {
@@ -393,31 +399,6 @@
     bottom: 16px;
   }
 
-  .life-mode-switch {
-    top: 12px;
-    right: 12px;
-    font-size: 12px;
-  }
-
-  .life-mode-switch a {
-    padding: 8px 10px;
-  }
-
-  .life-meadow {
-    top: auto;
-    bottom: -5%;
-    height: 70%;
-    transform: none;
-  }
-
-  .life-trees {
-    top: auto;
-    bottom: -3%;
-    height: min(67vw, 330px);
-    background-size: contain;
-    background-position: center bottom;
-    transform: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -427,5 +408,6 @@
   .life-vinyl { animation: none; }
   .life-painterly-midground,
   .life-painterly-flowers,
-  .life-painterly-under-tree { transition-duration: 0.01ms; transition-delay: 0ms; }
+  .life-painterly-under-tree,
+  .life-intro { transition-duration: 0.01ms; transition-delay: 0ms; }
 }

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { LifeModeSwitch } from "./LifeModeSwitch";
 import "./life.css";
 
 type ScenePhase = "overview" | "approaching" | "under-tree" | "returning";
@@ -107,6 +106,12 @@ export default function LifePainterly() {
         onPause={() => setSoundPlaying(false)}
       />
 
+      <div className="life-intro" aria-hidden={phase !== "overview"}>
+        <span className="life-intro-kicker">Welcome to Life</span>
+        <h1>A little world<br />to wander.</h1>
+        <p>Follow the light. Stay as long as you like.</p>
+      </div>
+
       <button
         className="life-tree-spot"
         type="button"
@@ -153,7 +158,6 @@ export default function LifePainterly() {
         </span>
       </button>
 
-      <LifeModeSwitch current="painterly" />
     </main>
   );
 }
