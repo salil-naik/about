@@ -1,4 +1,5 @@
 import "./life.css";
+import { LifeModeSwitch } from "./LifeModeSwitch";
 
 export default function Life() {
   return (
@@ -9,6 +10,7 @@ export default function Life() {
       <div className="life-layer life-sky" aria-hidden="true" />
       <div className="life-layer life-meadow" aria-hidden="true" />
       <div className="life-layer life-trees" aria-hidden="true" />
+      <LifeModeSwitch current="images" />
     </main>
   );
 }
