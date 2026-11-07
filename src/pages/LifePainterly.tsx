@@ -59,6 +59,7 @@ export default function LifePainterly() {
   const [phase, setPhase] = useState<ScenePhase>("overview");
   const [cardFlipped, setCardFlipped] = useState(false);
   const [songOpened, setSongOpened] = useState(false);
+  const [playerExpanded, setPlayerExpanded] = useState(false);
   const [songPlaying, setSongPlaying] = useState(false);
   const [songTime, setSongTime] = useState(0);
   const [songDuration, setSongDuration] = useState(0);
@@ -69,12 +70,18 @@ export default function LifePainterly() {
     const song = songRef.current;
     if (!song) return;
     setSongOpened(true);
+    setPlayerExpanded(true);
     if (!song.paused) {
       song.pause();
       return;
     }
     if (song.ended) song.currentTime = 0;
     void song.play().catch(() => setSongPlaying(false));
+  };
+
+  const closePlayer = () => {
+    songRef.current?.pause();
+    setPlayerExpanded(false);
   };
 
   useEffect(() => {
@@ -112,6 +119,7 @@ export default function LifePainterly() {
       className="life-scene life-painterly"
       data-phase={phase}
       data-song-open={songOpened}
+      data-player-expanded={playerExpanded}
       aria-label="A quiet, painterly landscape with distant mountains and wildflowers"
     >
       <div className="life-layer life-painterly-distant" aria-hidden="true" />
@@ -209,7 +217,7 @@ export default function LifePainterly() {
         </div>
       </section>
 
-      {songOpened && <div className="life-player is-open">
+      {songOpened && (playerExpanded ? <div className="life-player is-open">
         <span className="life-player-record" aria-hidden="true">
           <span className={`life-vinyl${songPlaying ? " is-spinning" : ""}`}>
             <span className="life-vinyl-shine" />
@@ -256,7 +264,17 @@ export default function LifePainterly() {
             )}
           </svg>
         </button>
-      </div>}
+        <button className="life-player-close" type="button" onClick={closePlayer} aria-label="Close song player" title="Close player">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M5.5 5.5 14.5 14.5M14.5 5.5 5.5 14.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+          </svg>
+        </button>
+      </div> : <button className="life-player-mini" type="button" onClick={() => setPlayerExpanded(true)} aria-label="Open song player" title="Open song player">
+        <span className="life-vinyl" aria-hidden="true">
+          <span className="life-vinyl-shine" />
+          <span className="life-vinyl-label" />
+        </span>
+      </button>)}
 
     </main>
   );
