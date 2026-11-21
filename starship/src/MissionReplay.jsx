@@ -177,7 +177,7 @@ export default function MissionReplay({selectFlight}) {
       </div>}
 
     </DropdownMenu>}
-    {archive&&<Archive close={()=>setArchive(false)} selectFlight={selectFlight}/>}
+    {archive&&<Archive close={()=>setArchive(false)} selectFlight={selectFlight} currentFlight={mission.number}/>}
     {share&&<dialog className="atlas-dialog moment-dialog" ref={shareDialog} onClose={()=>setShare('')}><header><h2>Share this moment</h2><button aria-label="Close share" onClick={()=>setShare('')}><X/></button></header><p>Flight {mission.number} · {elapsedLabel(time)} · Globe</p>
       {location.protocol==='file:'&&<p>This link opens this copy on your device.</p>}<input aria-label="Moment link" readOnly value={share} onFocus={e=>e.target.select()}/><button className="copy-link" onClick={async e=>{const field=e.currentTarget.previousElementSibling;try{await navigator.clipboard.writeText(share);setCopied(true);}catch{field.focus();field.select();setCopied(document.execCommand('copy'));}}}>{copied?'Copied':'Copy link'} <ArrowRight size={14}/></button></dialog>}
   </div>
