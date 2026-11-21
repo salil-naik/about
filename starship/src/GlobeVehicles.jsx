@@ -1,5 +1,5 @@
 import {useMission} from './MissionContext';
-import React,{useEffect,useMemo,useRef} from 'react';
+import React,{useEffect,useMemo} from 'react';
 import * as THREE from 'three';
 import {useFrame} from '@react-three/fiber';
 import StarbaseSite from './StarbaseSite';
@@ -38,11 +38,7 @@ function Tower({time}){
   </group>;
 }
 function Locator({fix,label,detail,onLocate}){
-
-  const last=useRef(0);
-  useFrame(({camera,clock})=>{
-    if(clock.elapsedTime-last.current<.1)return;
-    last.current=clock.elapsedTime;
+  useFrame(({camera})=>{
     const p=new THREE.Vector3(...xyz(fix)),distance=camera.position.distanceTo(p);
     const projected=p.clone().project(camera);
     const ahead=p.clone().sub(camera.position).dot(camera.getWorldDirection(new THREE.Vector3()))>0;

@@ -27,10 +27,10 @@ export function followCameraPose(previous,desired,dt){
  const target=previous.target.clone().lerp(desired.target,THREE.MathUtils.lerp(1,alpha,THREE.MathUtils.smoothstep(desiredRange,.02,.3)));
  return {target,position:target.clone().add(offset),up:previous.up.clone().lerp(desired.up,alpha).normalize()};
 }
-export function cameraPose(time,followTarget='ship',mission=null,overview=false){
+export function cameraPose(time,followTarget='ship',mission=null,overview=false,compact=false){
   const {shipFix,boosterFix,cameraOrbit,cameraRange,METRE}=mission||defaultDynamics;
   const pad=mission?.pad||defaultPad,astronomyAt=mission?.astronomyAt||defaultAstronomy,activeReturnCheck=mission?.returnCheck||defaultReturnCheck;
-  if(overview){const axis=new THREE.Vector3(...xyz(mission?.pad||pad)).normalize();return {target:new THREE.Vector3(),position:axis.multiplyScalar(2.8),up:new THREE.Vector3(0,1,0)};}
+  if(overview){const axis=new THREE.Vector3(...xyz(mission?.pad||pad)).normalize();return {target:new THREE.Vector3(),position:axis.multiplyScalar(compact?5.8:2.8),up:new THREE.Vector3(0,1,0)};}
   const booster=followTarget==='booster'&&(mission?mission.boosterAvailable(time):time>=141&&time<407);
   const point=new THREE.Vector3(...xyz(booster?boosterFix(time):shipFix(time)));
   const radial=point.clone().normalize();
@@ -52,6 +52,11 @@ export function cameraPose(time,followTarget='ship',mission=null,overview=false)
     const ground=site.addScaledVector(east,-.28/6371*.8).addScaledVector(north,-.28/6371*.55);
     position.lerp(ground,groundBlend);
   }
+  // A portrait viewport has a much narrower horizontal field of view.
+  // Pull back only when the camera is already composing a full-Earth shot.
+  if(compact&&altitude>=100&&target.length()<.25&&position.distanceTo(target)<5.8){
+    position.sub(target).setLength(5.8).add(target);
+  }
   if(followTarget==='moon'||followTarget==='sun'){
     const astro=astronomyAt(time);
     const sightline=new THREE.Vector3(...astro[followTarget]).sub(position).normalize();
@@ -59,7 +64,7 @@ export function cameraPose(time,followTarget='ship',mission=null,overview=false)
   }
   if(followTarget==='return'){
     const r=activeReturnCheck(time);
-    if(r){const axis=new THREE.Vector3(...xyz([0,r.lat,r.lon,0])).normalize();return {target:new THREE.Vector3(),position:axis.multiplyScalar(3),up:new THREE.Vector3(0,1,0)};}
+    if(r){const axis=new THREE.Vector3(...xyz([0,r.lat,r.lon,0])).normalize();return {target:new THREE.Vector3(),position:axis.multiplyScalar(compact?5.8:3),up:new THREE.Vector3(0,1,0)};}
   }
   return {target,position,up:radial.clone().lerp(new THREE.Vector3(0,1,0),orbit).normalize()};
 }

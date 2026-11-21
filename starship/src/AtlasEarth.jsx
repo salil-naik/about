@@ -188,7 +188,7 @@ function Scene({time,overview,light,reset,onFollowChange,onLocate,followTarget,c
   const {camera}=useThree();
   useEffect(()=>{
     free.current=false;
-    const pose=cameraPose(time,followTarget,mission,overview);
+    const pose=cameraPose(time,followTarget,mission,overview,compact);
     if(tracked.current){
       transition.current={elapsed:0,from:{position:camera.position.clone(),target:(controls.current?.target||pose.target).clone(),up:camera.up.clone()}};
     }else{
@@ -198,10 +198,10 @@ function Scene({time,overview,light,reset,onFollowChange,onLocate,followTarget,c
       controls.current?.update();
     }
     onFollowChange?.(true);
-  },[reset,camera,followTarget,overview]);
+  },[reset,camera,followTarget,overview,compact]);
   useFrame((_,dt)=>{
     if(!free.current){
-      let pose=cameraPose(time,followTarget,mission,overview);
+      let pose=cameraPose(time,followTarget,mission,overview,compact);
       if(transition.current){
         transition.current.elapsed+=Math.min(dt,.1);
         const progress=Math.min(1,transition.current.elapsed/1.8);
@@ -235,9 +235,27 @@ export default function AtlasEarth(props){
   const compact=window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
   const {shipFix,returnCheck:activeReturnCheck,stageSeconds,boosterAvailable}=mission;
   const [locators,setLocators]=useState({});
-  const locate=React.useCallback(marker=>setLocators(previous=>({...previous,[marker.label]:marker})),[]);
+  const [markersClose,setMarkersClose]=useState(false);
+  const markerSnapshot=useRef({}),markerNodes=useRef({}),closeSnapshot=useRef(false),boosterActive=useRef(false);
+  boosterActive.current=boosterAvailable(props.time);
+  const locate=React.useCallback(marker=>{
+    const previous=markerSnapshot.current[marker.label];
+    markerSnapshot.current[marker.label]=marker;
+    const node=markerNodes.current[marker.label];
+    if(node){node.style.left=marker.x+'%';node.style.top=marker.y+'%';}
+    // Position changes every frame; only marker metadata needs a React render.
+    if(!previous||previous.visible!==marker.visible||previous.detail!==marker.detail||previous.kind!==marker.kind){
+      setLocators(current=>({...current,[marker.label]:marker}));
+    }
+    const ship=markerSnapshot.current.Starship,booster=markerSnapshot.current['Super Heavy'];
+    const close=!!(boosterActive.current&&ship?.visible&&booster?.visible&&Math.hypot((ship.x-booster.x)*window.innerWidth/100,(ship.y-booster.y)*window.innerHeight/100)<80);
+    if(close!==closeSnapshot.current){closeSnapshot.current=close;setMarkersClose(close);}
+  },[]);
   const fallback=<div className="map-fallback"><OrbitLocator fix={shipFix(props.time)}/><span>Position on Earth</span></div>;
   return <MapBoundary fallback={fallback}><Canvas shadows={!compact} fallback={fallback} camera={{position:[.4,1,2.9],fov:45,near:1e-9,far:30}} dpr={compact?1:[1,2]} gl={{alpha:true,antialias:!compact}}><Scene {...props} compact={compact} onLocate={locate}/></Canvas>
-    <div className="globe-locators">{Object.values(locators).filter(m=>m.visible&&((m.kind==='return'&&activeReturnCheck(props.time)?.name===m.label)||m.label===(props.time<stageSeconds?'Starship / Super Heavy':'Starship')||(m.label==='Super Heavy'&&boosterAvailable(props.time)))).map(m=><div key={m.label} className={'vehicle-locator '+(m.kind==='vehicle'?'rocket-locator':'region-locator')} style={{position:'absolute',left:m.x+'%',top:m.y+'%'}}>{m.kind==='vehicle'?<b className="rocket-symbol" aria-label={m.label+' location symbol'}><svg viewBox="0 0 24 48"  aria-hidden="true">{m.label==='Super Heavy'?<path d="M8 5H16V42H8Z M8 9L4 13V17L8 15 M16 9L20 13V17L16 15"/>:<path d="M12 3Q7 8 8 15V35L4 40V44L9 41H15L20 44V40L16 35V15Q17 8 12 3Z"/>}</svg></b>:<i/>}<span><span className="locator-name">{m.label}</span><span className="locator-name-short">{m.label==='Starship / Super Heavy'?'Starship + Booster':m.label}</span>{m.detail&&<small>{m.detail}</small>}</span></div>)}</div>
+    <div className="globe-locators">{Object.values(locators).filter(m=>m.visible&&((m.kind==='return'&&activeReturnCheck(props.time)?.name===m.label)||m.label===(props.time<stageSeconds?'Starship / Super Heavy':'Starship')||(m.label==='Super Heavy'&&boosterAvailable(props.time)))).map(m=>{
+      const label=markersClose&&m.label==='Starship'?'Starship + Booster':m.label;
+      return <div key={m.label} ref={node=>{markerNodes.current[m.label]=node;}} className={'vehicle-locator '+(m.kind==='vehicle'?'rocket-locator':'region-locator')} style={{position:'absolute',left:m.x+'%',top:m.y+'%'}}>{m.kind==='vehicle'?<b className="rocket-symbol" aria-label={m.label+' location symbol'}><svg viewBox="0 0 24 48" aria-hidden="true">{m.label==='Super Heavy'?<path d="M8 5H16V42H8Z M8 9L4 13V17L8 15 M16 9L20 13V17L16 15"/>:<path d="M12 3Q7 8 8 15V35L4 40V44L9 41H15L20 44V40L16 35V15Q17 8 12 3Z"/>}</svg></b>:<i/>}{!(markersClose&&m.label==='Super Heavy')&&<span><span className="locator-name">{label}</span><span className="locator-name-short">{label==='Starship / Super Heavy'?'Starship + Booster':label}</span>{m.detail&&<small>{m.detail}</small>}</span>}</div>;
+    })}</div>
   </MapBoundary>;
 }

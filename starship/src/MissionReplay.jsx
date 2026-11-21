@@ -1,6 +1,6 @@
 import {useMission} from './MissionContext';
 import React, {useEffect,useRef,useState} from 'react';
-import {ArrowRight,ArrowUpRight,ChevronRight,Link2,Pause,Play,RotateCcw,X} from 'lucide-react';
+import {ArrowRight,ArrowUpRight,ChevronRight,Link2,Menu,Pause,Play,RotateCcw,X} from 'lucide-react';
 import AtlasEarth from './AtlasEarth';
 import ArcTimeline from './ArcTimeline';
 import {DropdownMenu} from './MissionMenu';
@@ -34,6 +34,8 @@ export default function MissionReplay({selectFlight}) {
   const [following,setFollowing]=useState(true),[followTarget,setFollowTarget]=useState('ship');
   const [cover,setCover]=useState(!initial),[archive,setArchive]=useState(false);
   const [drawer,setDrawer]=useState(''),[resetMap,setResetMap]=useState(0);
+  const [mobileMenu,setMobileMenu]=useState(false);
+  const mobileMenuRef=useRef(null);
   const [share,setShare]=useState(''),[copied,setCopied]=useState(false);
   const shareDialog=useRef(null);
   const time=position,duration=end;
@@ -61,6 +63,14 @@ export default function MissionReplay({selectFlight}) {
   },[playing,duration,rate,followTarget]);
   useEffect(()=>{if(share)shareDialog.current?.showModal();},[share]);
   useEffect(()=>{
+    if(!mobileMenu)return;
+    const outside=event=>{if(!mobileMenuRef.current?.contains(event.target))setMobileMenu(false);};
+    const escape=event=>{if(event.key==='Escape'){setMobileMenu(false);mobileMenuRef.current?.querySelector('.mobile-nav-trigger')?.focus();}};
+    document.addEventListener('pointerdown',outside);
+    document.addEventListener('keydown',escape);
+    return()=>{document.removeEventListener('pointerdown',outside);document.removeEventListener('keydown',escape);};
+  },[mobileMenu]);
+  useEffect(()=>{
     function restoreMoment(){
       const moment=getMoment(mission);
       if(!moment)return;
@@ -87,13 +97,17 @@ export default function MissionReplay({selectFlight}) {
     if((followTarget==='booster'&&!boosterAvailable)||(followTarget==='return'&&!region)){setFollowTarget('ship');setFollowing(true);setResetMap(n=>n+1);}
   },[time,followTarget,boosterAvailable,region?.key]);
   const caption=cover?flight.landmark+'. '+(mission.measured?'Recorded ship track.':mission.historical?'Webcast measurements · estimated ground track.':'Illustrative mission reconstruction.'):region&&followTarget==='return'?'Viewing the scheduled return region. Starship continues along its recorded orbit.':event.detail;
-  function openPanel(name){setApproaching(false);setPlaying(false);setDrawer(drawer===name?'':name);}
+  function openPanel(name){setMobileMenu(false);setApproaching(false);setPlaying(false);setDrawer(drawer===name?'':name);}
   function resumeFollow(target='ship'){setFollowTarget(target);setFollowing(true);setResetMap(n=>n+1);}
   const scrub=(v)=>{setApproaching(false);setCover(false);setPlaying(false);move(v);};
   return <div className={'observatory light-mission-sun'+(cover?' is-cover':' is-replay')}>
     <header className="orb-header"><div className="orb-identity"><a className="orb-brand" href="/" aria-label="Salil Naik homepage"><StarshipLogo/><span className="orb-brand-copy"><strong>Starship</strong><small>Flight Atlas</small><small className="mobile-byline">Flight Atlas · by Salil Naik</small></span></a><span className="orb-byline">by <a href="/">Salil Naik</a></span></div>
-      <button className="mission-picker" onClick={()=>{setArchive(true);setApproaching(false);setPlaying(false);}}><span className="picker-label">Explore mission</span><span className="picker-value">Flight {mission.number}</span><ChevronRight size={16}/></button>
+      <button className="mission-picker" onClick={()=>{setMobileMenu(false);setArchive(true);setApproaching(false);setPlaying(false);}}><span className="picker-label">Explore mission</span><span className="picker-value">Flight {mission.number}</span><ChevronRight size={16}/></button>
       <div className="orb-nav"><button onClick={()=>openPanel('log')}>Flight log</button><button aria-label="Mission details" onClick={()=>openPanel('details')}><span className="nav-label-desktop">Mission details</span><span className="nav-label-mobile">Details</span></button><button aria-label="Share moment" onClick={shareMoment}><Link2 size={16}/></button></div>
+      <div className="mobile-nav" ref={mobileMenuRef}>
+        <button className="mobile-nav-trigger" aria-label="More options" aria-expanded={mobileMenu} aria-controls="mobile-nav-menu" onClick={()=>setMobileMenu(open=>!open)}><Menu size={18}/></button>
+        {mobileMenu&&<div className="mobile-nav-menu" id="mobile-nav-menu"><button onClick={()=>openPanel('log')}>Flight log <ArrowUpRight size={15}/></button><button onClick={()=>openPanel('details')}>Mission details <ArrowUpRight size={15}/></button><button onClick={()=>{setMobileMenu(false);shareMoment();}}>Share moment <Link2 size={15}/></button></div>}
+      </div>
     </header>
     <main className="observing">
       <div className="visual-column">
