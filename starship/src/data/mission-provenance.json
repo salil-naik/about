@@ -1,0 +1,10 @@
+{
+  "source": "https://stardash.live/data/flight15-raw.csv",
+  "verifiedOn": "2026-11-21",
+  "sourceSHA256": "9568292f90c5b7a5d3d72494351d8e6c6a2fd5e007afef28557650f5edc69be5",
+  "matchedFixes": 2630,
+  "totalFixes": 2630,
+  "maxTimeErrorSeconds": 0.05099999999947613,
+  "maxAltitudeRoundingErrorMetres": 0.4997520000033546,
+  "notes": "Source position samples verified. Smooth interpolation, antenna-to-base reference, terminal catch timing, vehicle attitude and booster recovery route remain reconstructions."
+}

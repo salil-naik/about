@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import "./life.css";
 
 type ScenePhase = "overview" | "approaching" | "under-tree" | "returning";
+type RepeatMode = "off" | "once" | "forever";
 
 function formatTime(seconds: number) {
   if (!Number.isFinite(seconds)) return "0:00";
@@ -63,6 +64,7 @@ export default function LifePainterly() {
   const [songPlaying, setSongPlaying] = useState(false);
   const [songTime, setSongTime] = useState(0);
   const [songDuration, setSongDuration] = useState(0);
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>("off");
   const songRef = useRef<HTMLAudioElement>(null);
   const transitionTimer = useRef<number | null>(null);
 
@@ -82,6 +84,23 @@ export default function LifePainterly() {
   const closePlayer = () => {
     songRef.current?.pause();
     setPlayerExpanded(false);
+  };
+
+  const replaySong = () => {
+    const song = songRef.current;
+    if (!song) return;
+    song.currentTime = 0;
+    setSongTime(0);
+    void song.play().catch(() => setSongPlaying(false));
+  };
+
+  const handleSongEnded = () => {
+    if (repeatMode === "off") {
+      setSongPlaying(false);
+      return;
+    }
+    if (repeatMode === "once") setRepeatMode("off");
+    replaySong();
   };
 
   useEffect(() => {
@@ -136,7 +155,7 @@ export default function LifePainterly() {
         onTimeUpdate={(event) => setSongTime(event.currentTarget.currentTime)}
         onPlay={() => setSongPlaying(true)}
         onPause={() => setSongPlaying(false)}
-        onEnded={() => setSongPlaying(false)}
+        onEnded={handleSongEnded}
       />
       <div className="life-intro" aria-hidden={phase !== "overview"}>
         <span className="life-intro-kicker">A little world for you</span>
@@ -264,6 +283,13 @@ export default function LifePainterly() {
             )}
           </svg>
         </button>
+        <div className="life-player-actions" aria-label="Song options">
+          <button type="button" onClick={replaySong} title="Replay from the beginning">↺ <span>Replay</span></button>
+          <button type="button" aria-pressed={repeatMode === "once"} onClick={() => setRepeatMode(repeatMode === "once" ? "off" : "once")} title="Play one more time when the song ends">↻ <span>Once</span></button>
+          <button type="button" aria-pressed={repeatMode === "forever"} onClick={() => setRepeatMode(repeatMode === "forever" ? "off" : "forever")} title="Repeat until turned off">∞ <span>Forever</span></button>
+          <a href="/life/gehra-hua.mp3" download="Gehra-Hua.mp3" title="Download Gehra Hua">↓ <span>Download</span></a>
+          <a href="https://open.spotify.com/search/Gehra%20Hua" target="_blank" rel="noreferrer" title="Find Gehra Hua on Spotify">♫ <span>Spotify ↗</span></a>
+        </div>
         <button className="life-player-close" type="button" onClick={closePlayer} aria-label="Close song player" title="Close player">
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M5.5 5.5 14.5 14.5M14.5 5.5 5.5 14.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />

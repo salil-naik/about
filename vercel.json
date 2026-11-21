@@ -4,6 +4,8 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
+    { "source": "/starship", "destination": "/starship/index.html" },
+    { "source": "/starship/", "destination": "/starship/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

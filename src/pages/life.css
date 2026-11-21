@@ -544,7 +544,8 @@
   align-items: center;
   gap: 16px;
   width: min(540px, calc(100vw - 48px));
-  height: 116px;
+  min-height: 152px;
+  grid-template-rows: 74px auto;
   padding: 14px 20px 14px 18px;
   overflow: hidden;
   border: 1px solid rgba(255, 250, 237, 0.95);
@@ -553,6 +554,50 @@
   box-shadow: 0 22px 48px rgba(54, 37, 24, 0.24), 0 3px 9px rgba(54, 37, 24, 0.13), inset 0 0 0 1px rgba(117, 84, 56, 0.13);
   backdrop-filter: blur(16px);
   animation: life-player-appear 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.life-player-actions {
+  position: relative;
+  z-index: 1;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  min-width: 0;
+  padding-top: 7px;
+  border-top: 1px solid rgba(94, 69, 52, 0.15);
+}
+
+.life-player-actions button,
+.life-player-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 28px;
+  padding: 3px 7px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background: transparent;
+  color: #675243;
+  font: 600 10px/1 "Roboto", sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.life-player-actions button:hover,
+.life-player-actions a:hover,
+.life-player-actions button[aria-pressed="true"] {
+  border-color: rgba(128, 91, 62, 0.22);
+  background: rgba(137, 99, 67, 0.11);
+  color: #3e342d;
+}
+
+.life-player-actions :is(button, a):focus-visible {
+  outline: 2px solid #6d4935;
+  outline-offset: 1px;
 }
 
 .life-player::before {
@@ -973,7 +1018,8 @@
     grid-template-columns: 56px minmax(0, 1fr) 42px;
     gap: 10px;
     width: calc(100vw - 36px);
-    height: 104px;
+    min-height: 143px;
+    grid-template-rows: 56px auto;
     padding: 10px 13px;
     border-radius: 23px;
   }
@@ -1009,6 +1055,17 @@
   .life-player-toggle {
     width: 42px;
     height: 42px;
+  }
+
+  .life-player-actions {
+    gap: 1px;
+  }
+
+  .life-player-actions button,
+  .life-player-actions a {
+    gap: 3px;
+    padding-inline: 3px;
+    font-size: 9px;
   }
 
   .life-player-close {

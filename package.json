@@ -6,21 +6,31 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 3000",
     "build": "tsc --noEmit && vite build",
+    "test:starship": "cd starship && for test in scripts/test-cinematic.mjs scripts/test-astronomy.mjs scripts/test-flight-science.mjs scripts/test-archive.mjs scripts/test-historical.mjs; do node \"$test\" || exit 1; done",
     "start": "vite preview --host 127.0.0.1 --port 3000"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.2",
     "@vercel/analytics": "^2.0.1",
+    "astronomy-engine": "^2.1.19",
+    "d3-geo": "^3.1.2",
+    "lucide-react": "^0.468.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "three": "^0.181.2",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
+    "@vitejs/plugin-react": "^6.2.1",
+    "esbuild": "^0.28.2",
     "tailwindcss": "^4",
-    "vite": "^8.3.6",
-    "@vitejs/plugin-react": "^6.2.1"
+    "typescript": "^5",
+    "vite": "^8.3.6"
   }
 }

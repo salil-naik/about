@@ -14,7 +14,9 @@ npm run build
 npm start
 ```
 
-Available pages: `/`, `/thoughts`, and `/life`.
+Available pages: `/`, `/thoughts`, `/life`, and `/starship`.
+
+The Starship Flight Atlas lives in `starship/` and has its own HTML entry. Its 3D code and styles load only on `/starship`.
 
 `/life` is the interactive Painterly world.
 
