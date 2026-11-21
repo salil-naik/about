@@ -866,3 +866,62 @@
 @media(max-width:760px) {
   .is-replay .orb-story h1 {font-size:clamp(28px,8vw,42px)}
 }
+
+/* Keep the phone navigation on one calm, evenly spaced row. */
+@media(max-width:760px) {
+  .orb-header {
+    display:flex;
+    height:60px;
+    min-height:60px;
+    gap:10px;
+    padding-inline:var(--atlas-gutter);
+  }
+  .orb-identity {flex:none;min-width:0}
+  .orb-brand {gap:6px}
+  .atlas-mark {width:21px;height:28px}
+  .orb-brand-copy {gap:2px}
+  .orb-brand-copy strong {font-size:14px}
+  .orb-brand-copy small:not(.mobile-byline) {display:none}
+  .orb-brand-copy .mobile-byline {display:block;margin:0;color:#bdc9cc;font-size:8px;letter-spacing:0;text-transform:none}
+  .mission-picker {
+    grid-column:auto;
+    grid-row:auto;
+    flex:none;
+    justify-self:auto;
+    min-height:34px;
+    gap:5px;
+    padding:4px 8px!important;
+  }
+  .picker-label {display:none}
+  .picker-value {font-size:12px}
+  .orb-nav {
+    grid-column:auto;
+    grid-row:auto;
+    justify-self:auto;
+    margin-left:auto;
+    gap:2px;
+  }
+  .orb-nav button {min-height:34px;padding:5px 4px;font-size:10px!important;white-space:nowrap}
+  .orb-nav button:last-child {width:30px;justify-content:center}
+}
+@media(max-width:390px) {
+  .orb-header {gap:6px}
+  .orb-nav button {font-size:9px!important;padding-inline:3px}
+}
+@media(max-width:350px) {
+  .orb-header {
+    display:grid;
+    grid-template-columns:1fr auto;
+    grid-template-rows:42px 32px;
+    height:74px;
+    min-height:74px;
+    gap:0 6px;
+  }
+  .orb-identity {grid-column:1;grid-row:1}
+  .mission-picker {grid-column:2;grid-row:1}
+  .orb-nav {grid-column:1/-1;grid-row:2;justify-self:end;margin-left:0;gap:3px}
+  .orb-nav button:last-child {width:28px}
+  .orb-brand-copy strong {font-size:13px}
+  .orb-brand-copy small:not(.mobile-byline) {display:block}
+  .orb-brand-copy .mobile-byline {display:none}
+}

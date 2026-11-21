@@ -91,7 +91,7 @@ export default function MissionReplay({selectFlight}) {
   function resumeFollow(target='ship'){setFollowTarget(target);setFollowing(true);setResetMap(n=>n+1);}
   const scrub=(v)=>{setApproaching(false);setCover(false);setPlaying(false);move(v);};
   return <div className={'observatory light-mission-sun'+(cover?' is-cover':' is-replay')}>
-    <header className="orb-header"><div className="orb-identity"><a className="orb-brand" href="/" aria-label="Salil Naik homepage"><StarshipLogo/><span className="orb-brand-copy"><strong>Starship</strong><small>Flight Atlas</small><small className="mobile-byline">by Salil Naik</small></span></a><span className="orb-byline">by <a href="/">Salil Naik</a></span></div>
+    <header className="orb-header"><div className="orb-identity"><a className="orb-brand" href="/" aria-label="Salil Naik homepage"><StarshipLogo/><span className="orb-brand-copy"><strong>Starship</strong><small>Flight Atlas</small><small className="mobile-byline">Flight Atlas · by Salil Naik</small></span></a><span className="orb-byline">by <a href="/">Salil Naik</a></span></div>
       <button className="mission-picker" onClick={()=>{setArchive(true);setApproaching(false);setPlaying(false);}}><span className="picker-label">Explore mission</span><span className="picker-value">Flight {mission.number}</span><ChevronRight size={16}/></button>
       <div className="orb-nav"><button onClick={()=>openPanel('log')}>Flight log</button><button aria-label="Mission details" onClick={()=>openPanel('details')}><span className="nav-label-desktop">Mission details</span><span className="nav-label-mobile">Details</span></button><button aria-label="Share moment" onClick={shareMoment}><Link2 size={16}/></button></div>
     </header>
