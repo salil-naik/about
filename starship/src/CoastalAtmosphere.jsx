@@ -14,7 +14,7 @@ void main(){vec3 d=normalize(worldPoint-cameraPosition);float h=dot(d,up);
  sky=mix(sky,vec3(1.,.91,.72),disc);
  gl_FragColor=vec4(sky,strength*daylight);
 }`;
-export default function CoastalAtmosphere({time}){
+export default function CoastalAtmosphere({time,compact}){
   const {astronomyAt,site:{siteOrigin,siteUp}}=useMission();
   const material=useRef(),hemi=useRef(),shadowLight=useRef();
   const {scene}=useThree();
@@ -41,6 +41,6 @@ export default function CoastalAtmosphere({time}){
   return <>
     <mesh ref={node=>node?.layers.set(3)} renderOrder={-1000}><sphereGeometry args={[20,32,24]}/><shaderMaterial ref={material} uniforms={uniforms} vertexShader={vertex} fragmentShader={fragment} side={THREE.BackSide} transparent depthWrite={false} depthTest={false}/></mesh>
     <hemisphereLight ref={hemi} args={['#c3d5de','#6c735f',0]}/>
-    <directionalLight ref={shadowLight} target={target} castShadow color="#fff1d9" intensity={0} shadow-mapSize={[2048,2048]} shadow-camera-left={-450*METRE} shadow-camera-right={450*METRE} shadow-camera-top={450*METRE} shadow-camera-bottom={-450*METRE} shadow-camera-near={.015} shadow-camera-far={.025} shadow-bias={-.00000001} shadow-normalBias={.12*METRE}/>
+    <directionalLight ref={shadowLight} target={target} castShadow={!compact} color="#fff1d9" intensity={0} shadow-mapSize={compact?[512,512]:[2048,2048]} shadow-camera-left={-450*METRE} shadow-camera-right={450*METRE} shadow-camera-top={450*METRE} shadow-camera-bottom={-450*METRE} shadow-camera-near={.015} shadow-camera-far={.025} shadow-bias={-.00000001} shadow-normalBias={.12*METRE}/>
   </>;
 }

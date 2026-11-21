@@ -50,7 +50,7 @@ function Locator({fix,label,detail,onLocate}){
   });
   return null;
 }
-export default function GlobeVehicles({time,onLocate}){
+export default function GlobeVehicles({time,overview,compact,onLocate}){
   const mission=useMission();
   const {shipFix,shipOrigin,boosterFix,boosterOrigin,boosterAxis,METRE,dimensions,stageSeconds:SEPARATION,end:CATCH,landing,cutoff,boosterSeconds,boosterAvailable,site:{siteOrigin,siteRotation,shipRotation,boosterRotation,launchPosition}}=mission;
   const fix=shipFix(time);
@@ -61,16 +61,17 @@ export default function GlobeVehicles({time,onLocate}){
   const shipBurn=time<mission.flightEnd&&(shipEng!=null?shipEng>0:time<cutoff||time>=landing&&time<CATCH);
   const boostBurn=time<boosterSeconds&&(boostEng!=null?boostEng>0:time<SEPARATION+41||time>=boosterSeconds-25);
   const shipOpacity=mission.historical&&mission.shipOutcomeType==='lost'?1-THREE.MathUtils.smootherstep(time,mission.flightEnd,mission.flightEnd+5):1;
+  const showSite=!compact||!overview&&(time<600||mission.shipCatch&&time>=landing-180);
 
   return <>
-    <group position={siteOrigin} quaternion={siteRotation} scale={METRE}>
-      <LocalTerrain/>
+    {showSite&&<group position={siteOrigin} quaternion={siteRotation} scale={METRE}>
+      <LocalTerrain compact={compact}/>
       {time>=-3&&time<18&&<group position={launchPosition}><PadVapor time={time}/></group>}
       <StarbaseSite/>
       <Tower time={time}/>
       <group position={launchPosition}><Outline kind="cylinder" args={[11,14,8.5,16]} position={[0,4.25,0]}/></group>
 
-    </group>
+    </group>}
     <group position={shipOrigin(time)} quaternion={rotation} scale={METRE}>
       {mission.shipCatch&&time>=landing+10&&<PadVapor time={time-landing+81136} landing/>}
       {((time>=-3&&time<cutoff)||(time>=landing&&time<CATCH))&&<pointLight position={[0,time<SEPARATION?-dimensions.booster:0,0]} color="#ffb57a" intensity={.65} distance={80*METRE} decay={0}/>}

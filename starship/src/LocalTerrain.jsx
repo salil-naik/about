@@ -2,8 +2,8 @@ import React,{useMemo,useEffect} from 'react';
 import * as THREE from 'three';
 import site from './data/starbase-osm.json';
 const EXTENT=8000;
-function terrainTexture(){
-  const canvas=document.createElement('canvas');canvas.width=canvas.height=4096;
+function terrainTexture(compact){
+  const canvas=document.createElement('canvas');canvas.width=canvas.height=compact?1024:4096;
   const ctx=canvas.getContext('2d'),s=canvas.width/(EXTENT*2);
   ctx.fillStyle='#717861';ctx.fillRect(0,0,canvas.width,canvas.height);
   const coord=([east,north])=>[(east+EXTENT)*s,(EXTENT-north)*s];
@@ -28,20 +28,21 @@ function terrainTexture(){
   }
   // Very low contrast, deterministic soil grain. This is material texture,
   // not invented terrain elevation or satellite imagery.
-  let seed=71;for(let i=0;i<70000;i++){seed=(1664525*seed+1013904223)>>>0;const x=seed%4096;seed=(1664525*seed+1013904223)>>>0;const y=seed%4096;ctx.fillStyle=i%2?'#ffffff05':'#00000006';ctx.fillRect(x,y,2,2);}
-  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;return texture;
+  let seed=71;for(let i=0;i<(compact?8000:70000);i++){seed=(1664525*seed+1013904223)>>>0;const x=seed%canvas.width;seed=(1664525*seed+1013904223)>>>0;const y=seed%canvas.height;ctx.fillStyle=i%2?'#ffffff05':'#00000006';ctx.fillRect(x,y,2,2);}
+  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=compact?1:8;return texture;
 }
-export default function LocalTerrain(){
-  const texture=useMemo(terrainTexture,[]);
+export default function LocalTerrain({compact=false}){
+  const texture=useMemo(()=>terrainTexture(compact),[compact]);
   const geometry=useMemo(()=>{
-    const g=new THREE.PlaneGeometry(EXTENT*2,EXTENT*2,192,192);g.rotateX(-Math.PI/2);
+    const segments=compact?64:192;
+    const g=new THREE.PlaneGeometry(EXTENT*2,EXTENT*2,segments,segments);g.rotateX(-Math.PI/2);
     const p=g.attributes.position,r=6371000,colors=[];
     for(let i=0;i<p.count;i++){
       const x=p.getX(i),z=p.getZ(i);p.setY(i,Math.sqrt(r*r-x*x-z*z)-r+.03);
       colors.push(1,1,1,1-THREE.MathUtils.smoothstep(Math.hypot(x,z),4500,7900));
     }
     g.setAttribute('color',new THREE.Float32BufferAttribute(colors,4));g.computeVertexNormals();return g;
-  },[]);
+  },[compact]);
   useEffect(()=>()=>{texture.dispose();geometry.dispose();},[texture,geometry]);
   return <mesh geometry={geometry} receiveShadow><meshStandardMaterial map={texture} vertexColors transparent alphaTest={.02} roughness={.88} metalness={.02}/></mesh>;
 }

@@ -1,1 +1,20 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><meta name="theme-color" content="#07111c"/><meta name="description" content="Explore the first 15 Starship flights on an interactive globe."/><title>Starship Flight Atlas</title></head><body><div id="root"></div><script type="module" src="/starship/src/main.jsx"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="theme-color" content="#07111c" />
+    <meta name="description" content="Explore the first 15 Starship flights on an interactive globe." />
+    <title>Starship Flight Atlas</title>
+    <style>
+      body { margin: 0; background: #07111c; color: #f5f2eb; font-family: Arial, sans-serif; }
+      .atlas-startup { min-height: 100svh; display: grid; place-content: center; gap: 8px; text-align: center; }
+      .atlas-startup strong { font-size: 18px; }
+      .atlas-startup span { color: #a9bac1; font-size: 13px; }
+    </style>
+  </head>
+  <body>
+    <div id="root"><div class="atlas-startup" role="status"><strong>Starship Flight Atlas</strong><span>Loading the mission…</span></div></div>
+    <script type="module" src="/starship/src/main.jsx"></script>
+  </body>
+</html>

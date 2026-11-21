@@ -101,8 +101,8 @@ function MapBorders({coast=false}){
   });
   return <lineSegments geometry={geometry}><lineBasicMaterial ref={material} color={coast?'#c0d3c9':'#3c615c'} transparent opacity={coast?.38:.28} depthWrite={false}/></lineSegments>;
 }
-function returnMaskTexture(){
-  const c=document.createElement('canvas');c.width=4096;c.height=2048;
+function returnMaskTexture(width){
+  const c=document.createElement('canvas');c.width=width;c.height=width/2;
   const ctx=c.getContext('2d');ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);
   const path=geoPath(geoEquirectangular().scale(c.width/(2*Math.PI)).translate([c.width/2,c.height/2]),ctx);
   const countries=feature(world,world.objects.countries).features;
@@ -113,7 +113,7 @@ function returnMaskTexture(){
   ctx.fillStyle='#00ff00';ctx.beginPath();path(hawaii);ctx.fill();
   return new THREE.CanvasTexture(c);
 }
-function Surface({time}){
+function Surface({time,compact}){
   const {astronomyAt,returnCheck:activeReturnCheck}=useMission();
   const {gl}=useThree();
   const material=useRef();
@@ -121,11 +121,11 @@ function Surface({time}){
   useEffect(()=>{
     let active=true;
     const map=new THREE.TextureLoader().load(import.meta.env.BASE_URL+'earth-day.jpg',()=>{if(active)setTerrain(map);});
-    map.anisotropy=gl.capabilities.getMaxAnisotropy();
+    map.anisotropy=compact?1:gl.capabilities.getMaxAnisotropy();
     return()=>{active=false;map.dispose();};
-  },[gl]);
-  const texture=useMemo(()=>cartographicTexture(Math.min(8192,gl.capabilities.maxTextureSize),gl.capabilities.getMaxAnisotropy()),[gl]);
-  const regionMask=useMemo(returnMaskTexture,[]);
+  },[gl,compact]);
+  const texture=useMemo(()=>cartographicTexture(Math.min(compact?2048:8192,gl.capabilities.maxTextureSize),compact?1:gl.capabilities.getMaxAnisotropy()),[gl,compact]);
+  const regionMask=useMemo(()=>returnMaskTexture(compact?1024:4096),[compact]);
   useEffect(()=>()=>{texture.dispose();regionMask.dispose();},[texture,regionMask]);
   const uniforms=useMemo(()=>({surface:{value:texture},regionMask:{value:regionMask},regionChoice:{value:0},terrain:{value:terrain||texture},terrainReady:{value:terrain?1:0},terrainStrength:{value:.35},lightDir:{value:new THREE.Vector3()},tint:{value:new THREE.Color('#8eacc4')}}),[texture,terrain,regionMask]);
   uniforms.lightDir.value.fromArray(astronomyAt(time).sun).normalize();
@@ -140,7 +140,7 @@ function Surface({time}){
     const check=activeReturnCheck(time);
     live.regionChoice.value=check?(check.key==='hawaii'?1:2):0;
   });
-  return <><mesh><sphereGeometry args={[1,384,256]}/><shaderMaterial ref={material} vertexShader={vertex} fragmentShader={fragment} uniforms={uniforms}/></mesh><MapBorders coast/></>;
+  return <><mesh><sphereGeometry args={compact?[1,128,96]:[1,384,256]}/><shaderMaterial ref={material} vertexShader={vertex} fragmentShader={fragment} uniforms={uniforms}/></mesh><MapBorders coast/></>;
 }
 function Route({index,overview,tip}){
   const {samples,pad,historical}=useMission();
@@ -179,7 +179,7 @@ function BoosterTrail({time}){
   geometry.setDrawRange(0,Math.max(0,Math.min(Math.ceil((boosterSeconds-stageSeconds)/2),Math.floor((time-stageSeconds)/2)+1)));
   return <line geometry={geometry}><lineBasicMaterial color="#9bb9c2" transparent opacity={.55}/></line>;
 }
-function Scene({time,overview,light,reset,onFollowChange,onLocate,followTarget}){
+function Scene({time,overview,light,reset,onFollowChange,onLocate,followTarget,compact}){
   const mission=useMission();
   const {shipFix,fixIndex,returnCheck:activeReturnCheck,METRE}=mission;
   const tip=shipFix(time),controls=useRef(),free=useRef(false);
@@ -221,7 +221,7 @@ function Scene({time,overview,light,reset,onFollowChange,onLocate,followTarget})
     if(camera.position.length()<1+2*METRE){camera.position.normalize().multiplyScalar(1+2*METRE);}
     if(camera.position.length()>22){camera.position.normalize().multiplyScalar(22);}
   });
-  return <><CatalogStars time={time}/><Surface time={time}/><CelestialBodies time={time}/><SunLighting time={time}/><CoastalAtmosphere time={time}/><AstronomicalRenderer/><Route index={fixIndex(time)} overview={false} tip={tip}/><BoosterTrail time={time}/><GlobeVehicles time={time} onLocate={onLocate}/><Splashdown time={time}/><GlobeRegionMarkers time={time} onLocate={onLocate}/>
+  return <><CatalogStars time={time}/><Surface time={time} compact={compact}/><CelestialBodies time={time}/><SunLighting time={time}/><CoastalAtmosphere time={time} compact={compact}/><AstronomicalRenderer/><Route index={fixIndex(time)} overview={false} tip={tip}/><BoosterTrail time={time}/><GlobeVehicles time={time} overview={overview} compact={compact} onLocate={onLocate}/><Splashdown time={time}/><GlobeRegionMarkers time={time} onLocate={onLocate}/>
     <OrbitControls ref={controls} enablePan enableDamping dampingFactor={.09} minDistance={20*METRE} maxDistance={20} zoomSpeed={.65} onStart={()=>{free.current=true;onFollowChange?.(false);}}/>
   </>;
 }
@@ -232,11 +232,12 @@ class MapBoundary extends Component{
 }
 export default function AtlasEarth(props){
   const mission=useMission();
+  const compact=window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
   const {shipFix,returnCheck:activeReturnCheck,stageSeconds,boosterAvailable}=mission;
   const [locators,setLocators]=useState({});
   const locate=React.useCallback(marker=>setLocators(previous=>({...previous,[marker.label]:marker})),[]);
   const fallback=<div className="map-fallback"><OrbitLocator fix={shipFix(props.time)}/><span>Position on Earth</span></div>;
-  return <MapBoundary fallback={fallback}><Canvas shadows fallback={fallback} camera={{position:[.4,1,2.9],fov:45,near:1e-9,far:30}} dpr={[1,2]} gl={{alpha:true,antialias:true}}><Scene {...props} onLocate={locate}/></Canvas>
+  return <MapBoundary fallback={fallback}><Canvas shadows={!compact} fallback={fallback} camera={{position:[.4,1,2.9],fov:45,near:1e-9,far:30}} dpr={compact?1:[1,2]} gl={{alpha:true,antialias:!compact}}><Scene {...props} compact={compact} onLocate={locate}/></Canvas>
     <div className="globe-locators">{Object.values(locators).filter(m=>m.visible&&((m.kind==='return'&&activeReturnCheck(props.time)?.name===m.label)||m.label===(props.time<stageSeconds?'Starship / Super Heavy':'Starship')||(m.label==='Super Heavy'&&boosterAvailable(props.time)))).map(m=><div key={m.label} className={'vehicle-locator '+(m.kind==='vehicle'?'rocket-locator':'region-locator')} style={{position:'absolute',left:m.x+'%',top:m.y+'%'}}>{m.kind==='vehicle'?<b className="rocket-symbol" aria-label={m.label+' location symbol'}><svg viewBox="0 0 24 48"  aria-hidden="true">{m.label==='Super Heavy'?<path d="M8 5H16V42H8Z M8 9L4 13V17L8 15 M16 9L20 13V17L16 15"/>:<path d="M12 3Q7 8 8 15V35L4 40V44L9 41H15L20 44V40L16 35V15Q17 8 12 3Z"/>}</svg></b>:<i/>}<span><span className="locator-name">{m.label}</span><span className="locator-name-short">{m.label==='Starship / Super Heavy'?'Starship + Booster':m.label}</span>{m.detail&&<small>{m.detail}</small>}</span></div>)}</div>
   </MapBoundary>;
 }
