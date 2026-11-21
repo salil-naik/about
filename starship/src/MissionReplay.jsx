@@ -112,7 +112,7 @@ export default function MissionReplay({selectFlight}) {
     <main className="observing">
       <div className="visual-column">
         <div className="orb-map earth-scene">
-          <AtlasEarth time={time} overview={cover} reset={resetMap} followTarget={followTarget} onFollowChange={setFollowing}/>
+          <AtlasEarth time={time} overview={cover} reset={resetMap} following={following} followTarget={followTarget} onFollowChange={setFollowing}/>
         </div>
         <div className="follow-controls">
           <button aria-pressed={following&&followTarget==='ship'} onClick={()=>resumeFollow('ship')}><VehicleGlyph/>Follow Starship</button>

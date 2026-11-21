@@ -52,6 +52,10 @@ try{
   const desired=cameraPose(t,'ship',m),tracked=followCameraPose(cameraPose(t-1,'ship',m),desired,1/60);
   assert.ok(tracked.target.distanceTo(desired.target)<1e-12,'Close follow has no vehicle lag');
  }
+ const entry=cameraPose(80139,'ship',m,false,true),earlier=cameraPose(80111,'ship',m,false,true);
+ const anchored=followCameraPose(earlier,entry,1/60,true);
+ assert.ok(anchored.target.distanceTo(entry.target)<1e-12,'Fast follow locks the ship target');
+ assert.ok(anchored.position.clone().sub(anchored.target).normalize().distanceTo(entry.position.clone().sub(entry.target).normalize())<1e-12,'Fast follow locks viewing direction');
 
  for(const t of [18,132,141,153,175,240,489,79846,81128]){
    const p=cameraPose(t-.001,'ship',m),q=cameraPose(t+.001,'ship',m);

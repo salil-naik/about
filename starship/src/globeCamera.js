@@ -18,10 +18,13 @@ export function blendCameraPose(a,b,progress){
 }
 // Track the vehicle immediately in a close shot; ease the centre only after
 // the camera has pulled back far enough to retain the whole globe.
-export function followCameraPose(previous,desired,dt){
+export function followCameraPose(previous,desired,dt,anchor=false){
  const alpha=1-Math.exp(-Math.min(dt,.1)*5);
  const before=previous.position.clone().sub(previous.target),after=desired.position.clone().sub(desired.target);
  const desiredRange=after.length(),range=THREE.MathUtils.lerp(before.length(),desiredRange,alpha);
+ // When following a vehicle, rotate with its ground track immediately. Easing
+ // this direction makes its marker race ahead of the route at high replay speed.
+ if(anchor)return {target:desired.target.clone(),position:desired.target.clone().add(after.normalize().multiplyScalar(range)),up:desired.up.clone()};
  const turn=new THREE.Quaternion().setFromUnitVectors(before.normalize(),after.normalize());
  const offset=before.applyQuaternion(new THREE.Quaternion().slerp(turn,alpha)).multiplyScalar(range);
  const target=previous.target.clone().lerp(desired.target,THREE.MathUtils.lerp(1,alpha,THREE.MathUtils.smoothstep(desiredRange,.02,.3)));

@@ -145,10 +145,16 @@ function Surface({time,compact}){
 function Route({index,overview,tip}){
   const {samples,pad,historical}=useMission();
   const trailMaterial=useRef(),headMaterial=useRef();
+  const head=useMemo(()=>new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,0,0,0],3)),[]);
+  useEffect(()=>()=>head.dispose(),[head]);
   useFrame(({camera})=>{
     const detail=THREE.MathUtils.smoothstep(camera.position.distanceTo(new THREE.Vector3(...xyz(tip))),.0005,.03);
     if(trailMaterial.current)trailMaterial.current.opacity=.08+.74*detail;
     if(headMaterial.current)headMaterial.current.opacity=.2+.7*detail;
+    buffer.setDrawRange(0,2*Math.max(0,index+1));
+    head.attributes.position.setXYZ(0,...xyz(samples[index]||pad));
+    head.attributes.position.setXYZ(1,...xyz(tip));
+    head.attributes.position.needsUpdate=true;
   });
   // Pairs make gaps explicit, and avoid allocating a new trail every clock tick.
   const buffer=useMemo(()=>{
@@ -160,12 +166,6 @@ function Route({index,overview,tip}){
     return new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(vertices,3)).setAttribute('lineDistance',new THREE.Float32BufferAttribute(distances,1));
   },[]);
   useEffect(()=>()=>buffer.dispose(),[buffer]);
-  const last=index;
-  const first=0;
-  buffer.setDrawRange(2*first,2*Math.max(0,last-first+1));
-  const head=useMemo(()=>new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,0,0,0],3)),[]);
-  useEffect(()=>()=>head.dispose(),[head]);
-  head.attributes.position.setXYZ(0,...xyz(samples[index]||pad));head.attributes.position.setXYZ(1,...xyz(tip));head.attributes.position.needsUpdate=true;
   return <><lineSegments geometry={buffer}><lineDashedMaterial ref={trailMaterial} color="#ffbc7c" transparent opacity={.82} dashSize={historical?.001:100} gapSize={historical?.0005:0}/></lineSegments>{!overview&&<line geometry={head} frustumCulled={false}><lineBasicMaterial ref={headMaterial} color="#ffe6b9" transparent/></line>}</>
 }
 function BoosterTrail({time}){
@@ -179,13 +179,14 @@ function BoosterTrail({time}){
   geometry.setDrawRange(0,Math.max(0,Math.min(Math.ceil((boosterSeconds-stageSeconds)/2),Math.floor((time-stageSeconds)/2)+1)));
   return <line geometry={geometry}><lineBasicMaterial color="#9bb9c2" transparent opacity={.55}/></line>;
 }
-function Scene({time,overview,light,reset,onFollowChange,onLocate,followTarget,compact}){
+function Scene({time,overview,light,reset,onFollowChange,onLocate,onAnchor,followTarget,compact}){
   const mission=useMission();
   const {shipFix,fixIndex,returnCheck:activeReturnCheck,METRE}=mission;
   const tip=shipFix(time),controls=useRef(),free=useRef(false);
   const tracked=useRef(null);
   const transition=useRef(null);
   const {camera}=useThree();
+  const anchorCamera=useMemo(()=>new THREE.PerspectiveCamera(),[]);
   useEffect(()=>{
     free.current=false;
     const pose=cameraPose(time,followTarget,mission,overview,compact);
@@ -201,7 +202,8 @@ function Scene({time,overview,light,reset,onFollowChange,onLocate,followTarget,c
   },[reset,camera,followTarget,overview,compact]);
   useFrame((_,dt)=>{
     if(!free.current){
-      let pose=cameraPose(time,followTarget,mission,overview,compact);
+      const desired=cameraPose(time,followTarget,mission,overview,compact);
+      let pose=desired;
       if(transition.current){
         transition.current.elapsed+=Math.min(dt,.1);
         const progress=Math.min(1,transition.current.elapsed/1.8);
@@ -209,11 +211,21 @@ function Scene({time,overview,light,reset,onFollowChange,onLocate,followTarget,c
         tracked.current=pose;
         if(progress===1)transition.current=null;
       }
-      const state=followCameraPose(tracked.current||pose,pose,dt);
+      const state=followCameraPose(tracked.current||pose,pose,dt,!transition.current&&(followTarget==='ship'||followTarget==='booster'));
       tracked.current=state;
       camera.position.copy(state.position);camera.up.copy(state.up);
       controls.current?.target.copy(state.target);
       camera.lookAt(state.target);camera.updateMatrixWorld();
+      if(!transition.current&&(followTarget==='ship'||followTarget==='booster')){
+        const fix=followTarget==='booster'?mission.boosterFix(time):tip;
+        anchorCamera.copy(camera);
+        anchorCamera.position.copy(desired.position);
+        anchorCamera.up.copy(desired.up);
+        anchorCamera.lookAt(desired.target);
+        anchorCamera.updateMatrixWorld();
+        const projected=new THREE.Vector3(...xyz(fix)).project(anchorCamera);
+        onAnchor?.({x:(projected.x+1)*50,y:(1-projected.y)*50});
+      }else onAnchor?.(null);
     }
     // Preserve precision near the launch mount and depth range at orbit scale.
     const near=cameraNearPlane(camera.position,controls.current?.target||new THREE.Vector3());
@@ -237,8 +249,12 @@ export default function AtlasEarth(props){
   const [locators,setLocators]=useState({});
   const [markersClose,setMarkersClose]=useState(false);
   const markerSnapshot=useRef({}),markerNodes=useRef({}),closeSnapshot=useRef(false),boosterActive=useRef(false);
+  const anchor=useRef(null),followState=useRef({});
+  followState.current={following:props.following,target:props.followTarget};
   boosterActive.current=boosterAvailable(props.time);
   const locate=React.useCallback(marker=>{
+    const followed=followState.current.target==='booster'?marker.label==='Super Heavy':marker.label==='Starship'||marker.label==='Starship / Super Heavy';
+    if(marker.kind==='vehicle'&&followed&&followState.current.following&&anchor.current)marker={...marker,...anchor.current};
     const previous=markerSnapshot.current[marker.label];
     markerSnapshot.current[marker.label]=marker;
     const node=markerNodes.current[marker.label];
@@ -252,7 +268,7 @@ export default function AtlasEarth(props){
     if(close!==closeSnapshot.current){closeSnapshot.current=close;setMarkersClose(close);}
   },[]);
   const fallback=<div className="map-fallback"><OrbitLocator fix={shipFix(props.time)}/><span>Position on Earth</span></div>;
-  return <MapBoundary fallback={fallback}><Canvas shadows={!compact} fallback={fallback} camera={{position:[.4,1,2.9],fov:45,near:1e-9,far:30}} dpr={compact?1:[1,2]} gl={{alpha:true,antialias:!compact}}><Scene {...props} compact={compact} onLocate={locate}/></Canvas>
+  return <MapBoundary fallback={fallback}><Canvas shadows={!compact} fallback={fallback} camera={{position:[.4,1,2.9],fov:45,near:1e-9,far:30}} dpr={compact?1:[1,2]} gl={{alpha:true,antialias:!compact}}><Scene {...props} compact={compact} onLocate={locate} onAnchor={value=>{anchor.current=value;}}/></Canvas>
     <div className="globe-locators">{Object.values(locators).filter(m=>m.visible&&((m.kind==='return'&&activeReturnCheck(props.time)?.name===m.label)||m.label===(props.time<stageSeconds?'Starship / Super Heavy':'Starship')||(m.label==='Super Heavy'&&boosterAvailable(props.time)))).map(m=>{
       const label=markersClose&&m.label==='Starship'?'Starship + Booster':m.label;
       return <div key={m.label} ref={node=>{markerNodes.current[m.label]=node;}} className={'vehicle-locator '+(m.kind==='vehicle'?'rocket-locator':'region-locator')} style={{position:'absolute',left:m.x+'%',top:m.y+'%'}}>{m.kind==='vehicle'?<b className="rocket-symbol" aria-label={m.label+' location symbol'}><svg viewBox="0 0 24 48" aria-hidden="true">{m.label==='Super Heavy'?<path d="M8 5H16V42H8Z M8 9L4 13V17L8 15 M16 9L20 13V17L16 15"/>:<path d="M12 3Q7 8 8 15V35L4 40V44L9 41H15L20 44V40L16 35V15Q17 8 12 3Z"/>}</svg></b>:<i/>}{!(markersClose&&m.label==='Super Heavy')&&<span><span className="locator-name">{label}</span><span className="locator-name-short">{label==='Starship / Super Heavy'?'Starship + Booster':label}</span>{m.detail&&<small>{m.detail}</small>}</span>}</div>;
