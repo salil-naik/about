@@ -1,5 +1,6 @@
 import React,{useEffect,useState} from 'react';
 import {createRoot} from 'react-dom/client';
+import {Analytics} from '@vercel/analytics/react';
 import MissionReplay from './MissionReplay';
 import {MissionProvider} from './MissionContext';
 import './style.css';
@@ -10,4 +11,4 @@ function App(){
  const selectFlight=n=>{location.hash=new URLSearchParams({flight:String(n)});setNumber(n);};
  return <MissionProvider key={number} number={number}><MissionReplay selectFlight={selectFlight}/></MissionProvider>;
 }
-createRoot(document.getElementById('root')).render(<App/>);
+createRoot(document.getElementById('root')).render(<><App/><Analytics/></>);
