@@ -123,10 +123,10 @@ export default function MissionReplay({selectFlight}) {
       <aside className="orb-story"><div className="story-index"><i/>{cover?'MISSION ARCHIVE':event.source.toUpperCase()} <span>{cover?'/ F'+mission.number:'≈ '+elapsedLabel(event.time)}</span></div>
         <div key={cover?'intro':event.source==='StarDash estimate'?'deployment':eventIndex} className="event-reveal"><h1>{cover?<><span className="story-title-prefix">Starship</span><span className="story-title-main">Flight <em>{mission.number}.</em></span></>:(event.source==='StarDash estimate'?'Payload deployment':event.name).split(' ').map((w,i)=><React.Fragment key={i}>{i>0?' ':''}<span className="reveal-word" style={{'--delay':i*40+'ms'}}>{w}</span></React.Fragment>)}</h1>{cover?<><p className="story-lede">{flight.landmark}</p><p className="story-detail">{mission.measured?'Recorded ship track':mission.historical?'Webcast measurements · estimated ground track':'Illustrative mission reconstruction'}</p></>:<p>{caption}</p>}</div>
       </aside>
-      <div className="orb-hud">
+      <div className={'orb-hud'+(mission.historical?' has-webcast':'')}>
         <div className="hud-location">
           <div className="map-foot"><span className="hud-position-name">{mission.historical?'Estimated ':''}{followTarget==='booster'?'Super Heavy':'Starship'} position</span><strong className="hud-coordinates">{coordinates(trackedPos,mission.historical?1:3)}</strong><span className="hud-altitude">{altitude.toFixed(1)} km altitude</span>{mission.historical&&<><span className="webcast-readout">{webcastText}</span><button className="data-quality" onClick={()=>openPanel('details')}>{mission.historical.coverageAt(time,webcastVehicle)} ↗</button></>}{!mission.historical&&mission.positionEstimatedAt(time)&&<button className="data-quality" onClick={()=>openPanel('details')}>Estimated recovery after GPS record ↗</button>}</div>
-          {altitude<35&&Math.abs(pos[1]-mission.pad[1])<.1&&Math.abs(pos[2]-mission.pad[2])<.2&&<a className="site-attribution" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">Map data © OpenStreetMap contributors</a>}
+          {(mission.historical||altitude<35&&Math.abs(pos[1]-mission.pad[1])<.1&&Math.abs(pos[2]-mission.pad[2])<.2)&&<a className="site-attribution" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">Map data © OpenStreetMap contributors</a>}
         </div>
       </div>
     </main>
