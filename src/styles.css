@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source not "../services";
 
 /* add light mode colors here */
 /* :root {

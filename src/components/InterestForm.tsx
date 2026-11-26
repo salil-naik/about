@@ -1,0 +1,17 @@
+import { useState, type FormEvent } from "react";
+export default function InterestForm() {
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [error, setError] = useState("");
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setStatus("sending"); setError("");
+    const form = event.currentTarget;
+    try {
+      const response = await fetch("/api/interest", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form).entries())) });
+      if (response.headers.get("content-type")?.includes("application/json") !== true) throw new Error("The interest list is not connected yet. Please check back soon.");
+      const result = await response.json();
+      if (!response.ok || result.ok !== true) throw new Error(result.error || "Something went wrong. Please try again.");
+      setStatus("success"); form.reset();
+    } catch (cause) { setError(cause instanceof Error ? cause.message : "Something went wrong. Please try again."); setStatus("error"); }
+  }
+  return <div className="form-card">{status === "success" ? <div className="form-success" role="status"><span>✓</span><h3>You’re on the list.</h3><p>Thanks for your interest. I’ll share the course details when enrollment opens.</p><button type="button" onClick={() => setStatus("idle")}>Add another response ↗</button></div> : <form onSubmit={submit}><div className="form-head"><span>INTEREST LIST / 001</span><span>↗</span></div><h3>Join the first-cohort waitlist.</h3><p>A few details so I know who this course is for.</p><label htmlFor="name">Your name</label><input id="name" name="name" type="text" autoComplete="name" placeholder="Your name" required maxLength={100} /><label htmlFor="email">Email address</label><input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required maxLength={254} /><label htmlFor="experience">Where are you starting?</label><select id="experience" name="experience" required defaultValue=""><option value="" disabled>Choose one</option><option value="new">I’m new to building with AI</option><option value="some">I’ve tried a few tools</option><option value="building">I’m already building things</option></select><label htmlFor="course-interest">What are you most interested in?</label><select id="course-interest" name="course" required defaultValue="building"><option value="building">Building with AI</option><option value="motion">Motion design with AI (future course)</option><option value="both">Both</option></select><label className="consent"><input type="checkbox" name="consent" value="yes" required /><span>Email me about this course and related future courses. I can ask to be removed at any time.</span></label><input className="honeypot" type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" /><button className="learn-cta form-submit" type="submit" disabled={status === "sending"}>{status === "sending" ? "Submitting..." : "Join the waitlist"} <span>↗</span></button>{status === "error" && <p className="form-error" role="alert">{error}</p>}<small>Joining this list is free. It doesn’t reserve a seat.</small></form>}</div>;
+}

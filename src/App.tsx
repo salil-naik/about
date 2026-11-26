@@ -1,6 +1,7 @@
 import { SiteLayout } from "./components/SiteLayout";
 import About from "./pages/About";
 import LifePainterly from "./pages/LifePainterly";
+import Learn from "./pages/Learn";
 import Thoughts from "./pages/Thoughts";
 
 export default function App() {
@@ -9,6 +10,11 @@ export default function App() {
   if (path === "/life" || path === "/life/painterly") {
     document.title = "Life";
     return <LifePainterly />;
+  }
+
+  if (path === "/learn") {
+    document.title = "Learn with Salil";
+    return <Learn />;
   }
 
   document.title = "Salil Naik";

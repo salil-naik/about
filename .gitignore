@@ -37,3 +37,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# Independent Sites source checkout (published in its own repository)
+/services/learn-waitlist/
