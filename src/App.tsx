@@ -2,6 +2,7 @@ import { SiteLayout } from "./components/SiteLayout";
 import About from "./pages/About";
 import LifePainterly from "./pages/LifePainterly";
 import Learn from "./pages/Learn";
+import "./pages/learn2.css";
 import Thoughts from "./pages/Thoughts";
 
 export default function App() {
@@ -12,9 +13,9 @@ export default function App() {
     return <LifePainterly />;
   }
 
-  if (path === "/learn") {
+  if (path === "/learn" || path === "/learn2") {
     document.title = "Learn with Salil";
-    return <Learn />;
+    return <Learn skin={path === "/learn2" ? "arcade" : "classic"} />;
   }
 
   document.title = "Salil Naik";
