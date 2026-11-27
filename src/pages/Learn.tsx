@@ -81,9 +81,9 @@ function AwardCertificate() {
   </>;
 }
 
-export default function Learn() {
+export default function Learn({ variant }: { variant?: "warm" } = {}) {
   const { scrolled, active } = useLearnMotion();
-  return <main className="learn-page" id="top">
+  return <main className={`learn-page${variant ? ` learn-${variant}` : ""}`} id="top">
     <div className="learn-ambient" aria-hidden="true" />
     <header className={`learn-nav${scrolled ? " is-scrolled" : ""}`}>
       <div className="learn-wrap learn-nav-inner">
@@ -132,7 +132,7 @@ export default function Learn() {
       </div>
     </section>
 
-    <section className="learn-section learn-wrap">
+    <section className="learn-section learn-wrap learn-keep">
       <div className="learn-section-heading learn-reveal"><Eyebrow index="02">Yours to keep</Eyebrow><h2>The class ends.<br /><em>The work stays yours.</em></h2></div>
       <div className="learn-takeaways">{takeaways.map(([Icon, title, copy], index) => <div key={title} className="learn-reveal" style={{ ["--d" as string]: `${index * .08}s` }}><span className="learn-icon"><Icon size={20} strokeWidth={1.5} /></span><h3>{title}</h3><p>{copy}</p></div>)}</div>
       <div className="learn-access-note"><span>Before you enroll</span><p>Recording access, downloadable course resources, and any community access will be confirmed with the final cohort details.</p></div>

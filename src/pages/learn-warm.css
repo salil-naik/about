@@ -1,0 +1,127 @@
+/* Warm light/dark mix of the Learn page (/learn2). Only overrides; base styles live in learn.css.
+   The page is light (warm cream); a few "moment" blocks switch back to warm charcoal. */
+
+/* ---------- Light tokens (page default) ---------- */
+.learn-page.learn-warm {
+  --bg: #f6f2eb;
+  --surface: #efe9df;
+  --surface-2: #e8e1d5;
+  --raised: #fffdf9;
+  --text: #1b1714;
+  --soft: #3d3631;
+  --muted: #6b6258;
+  --faint: #998f84;
+  --line: rgba(27, 23, 20, .1);
+  --line-strong: rgba(27, 23, 20, .18);
+  --accent-rgb: 79, 92, 207;
+  --accent-ink: #ffffff;
+  --warm-rgb: 214, 92, 54;
+  --warm: rgb(var(--warm-rgb));
+  --cta-hover: #000;
+  --shadow: rgba(60, 38, 18, .28);
+  --radius: 22px;
+  color-scheme: light;
+}
+
+/* ---------- Dark tokens (scoped blocks) ---------- */
+.learn-warm .learn-enrollment,
+.learn-warm .learn-keep,
+.learn-warm .learn-interest,
+.learn-warm .learn-footer,
+.learn-warm .learn-lightbox {
+  --bg: #13100d;
+  --surface: #1b1713;
+  --surface-2: #221d18;
+  --raised: #29231d;
+  --text: #f7f2eb;
+  --soft: #d9d0c4;
+  --muted: #a69c8f;
+  --faint: #776d61;
+  --line: rgba(247, 238, 226, .09);
+  --line-strong: rgba(247, 238, 226, .16);
+  --accent-rgb: 176, 186, 255;
+  --accent-ink: #0d1030;
+  --warm-rgb: 255, 164, 130;
+  /* derived colours must be redeclared here, or they keep the light values */
+  --warm: rgb(var(--warm-rgb));
+  --accent: rgb(var(--accent-rgb));
+  --accent-soft: rgba(var(--accent-rgb), .12);
+  --cta-hover: #fffaf4;
+  --shadow: rgba(0, 0, 0, .8);
+  color: var(--text);
+  color-scheme: dark;
+}
+/* Full-bleed charcoal for blocks that sit inside the 1180px wrap */
+.learn-warm .learn-keep, .learn-warm .learn-footer {
+  background: var(--bg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax); border-top-color: transparent;
+}
+.learn-warm .learn-footer { padding-block: 40px; }
+.learn-warm .learn-keep + section { border-top-color: transparent; }
+.learn-warm .learn-interest { border-top-color: transparent; background: radial-gradient(60% 70% at 0% 100%, rgba(var(--warm-rgb), .12), transparent 70%), radial-gradient(50% 60% at 100% 0%, rgba(var(--accent-rgb), .07), transparent 70%), var(--bg); }
+.learn-warm .learn-enrollment { box-shadow: 0 50px 90px -40px rgba(60, 38, 18, .55), 0 0 0 1px var(--line) inset; }
+
+/* ---------- Ambient, nav, buttons ---------- */
+.learn-warm .learn-ambient {
+  background:
+    radial-gradient(55% 45% at 84% 12%, rgba(var(--accent-rgb), .10), transparent 70%),
+    radial-gradient(50% 45% at 4% 2%, rgba(var(--warm-rgb), .12), transparent 70%);
+}
+.learn-warm::before { opacity: .045; }
+.learn-warm .learn-nav { background: rgba(246, 242, 235, .55); }
+.learn-warm .learn-nav.is-scrolled { background: rgba(246, 242, 235, .86); box-shadow: 0 10px 30px -22px var(--shadow); }
+.learn-warm .learn-nav nav, .learn-warm .learn-badge { background: rgba(27, 23, 20, .035); }
+.learn-warm .learn-nav nav a:hover { background: rgba(27, 23, 20, .06); }
+.learn-warm .learn-nav nav a.is-active { background: rgba(27, 23, 20, .08); }
+.learn-warm .learn-nav-cta { color: var(--bg); }
+.learn-warm .learn-nav-cta:hover { background: #000; }
+.learn-warm .learn-cta { color: var(--bg); box-shadow: 0 1px 0 rgba(255, 255, 255, .18) inset, 0 12px 30px -12px rgba(var(--warm-rgb), .55); }
+.learn-warm .learn-cta:hover { background: var(--cta-hover); box-shadow: 0 16px 40px -14px rgba(var(--warm-rgb), .7); }
+
+/* ---------- Accents ---------- */
+.learn-page.learn-warm h1 em, .learn-page.learn-warm h2 em { color: var(--warm); font-weight: 400; }
+.learn-warm .learn-dot { background: var(--warm); box-shadow: 0 0 0 4px rgba(var(--warm-rgb), .16); }
+.learn-warm .learn-quote-mark, .learn-warm .learn-card-label, .learn-warm .learn-session-output > span { color: var(--warm); }
+.learn-page.learn-warm h1 em {
+  padding-bottom: .08em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'%3E%3Cpath d='M3 9.5C60 4 120 3.5 178 6.5s88 3 119-2' fill='none' stroke='%23d65c36' stroke-width='3.2' stroke-linecap='round' opacity='.7'/%3E%3C/svg%3E") no-repeat left 100% / 100% .2em;
+}
+
+/* ---------- Fewer "system" cues ---------- */
+.learn-warm .learn-eyebrow { font: 500 14.5px/1.4 var(--sans); letter-spacing: -.005em; text-transform: none; color: var(--muted); }
+.learn-warm .learn-eyebrow-index { display: none; }
+.learn-warm #curriculum .learn-eyebrow-index { display: inline; color: var(--warm); font-variant-numeric: tabular-nums; }
+.learn-warm .learn-hero-facts dt,
+.learn-warm .learn-card-label,
+.learn-warm .learn-context-label,
+.learn-warm .learn-portrait-frame figcaption span:last-child,
+.learn-warm .learn-session-output > span,
+.learn-warm .learn-access-note > span,
+.learn-warm .learn-policy-row > div > span,
+.learn-warm .form-head,
+.learn-warm .learn-award-copy > span:first-child,
+.learn-warm .learn-lightbox-frame figcaption {
+  font-family: var(--sans); font-size: 13px; font-weight: 500; letter-spacing: 0; text-transform: none;
+}
+
+/* ---------- Light-surface fixes for colours hardcoded for dark ---------- */
+.learn-warm .learn-company-logos a { filter: grayscale(1) brightness(0); opacity: .45; }
+.learn-warm .learn-company-logos a:hover { filter: none; opacity: 1; }
+.learn-warm .learn-curriculum { background: linear-gradient(180deg, var(--surface), var(--bg)); }
+.learn-warm .learn-session-output { background: rgba(255, 253, 249, .6); }
+.learn-warm .learn-takeaways > div { background: var(--surface); }
+.learn-warm .learn-expectation-grid > div { background: var(--raised); }
+.learn-warm .learn-expectation-grid > div:last-child h3 span { background: rgba(27, 23, 20, .06); }
+.learn-warm .learn-native-tweet { background: var(--raised); }
+.learn-warm .learn-native-tweet:hover { background: #fff; box-shadow: 0 0 0 1px var(--line-strong) inset, 0 30px 60px -30px var(--shadow); }
+.learn-warm .learn-quoted-tweet { background: var(--bg); }
+.learn-warm .learn-tweet-media { filter: saturate(.7); }
+.learn-warm details[open] summary > span { color: var(--bg); }
+.learn-warm .learn-portrait { filter: saturate(1) contrast(1.02) sepia(.05); }
+.learn-warm .learn-portrait-frame { box-shadow: 0 0 0 1px var(--line), 0 40px 80px -40px var(--shadow); }
+.learn-warm .learn-portrait-frame figcaption { color: #efe8de; }
+.learn-warm .learn-portrait-frame figcaption span:last-child { color: rgba(239, 232, 222, .75); }
+.learn-warm .learn-award { background: var(--raised); }
+.learn-warm .learn-award:hover { background: #fff; }
+.learn-warm .learn-award-frame { box-shadow: 0 1px 0 rgba(255, 255, 255, .12) inset, 0 12px 22px -10px rgba(60, 38, 18, .5); }
+.learn-warm .learn-lightbox::backdrop { background: rgba(20, 15, 11, .82); }
+.learn-warm .learn-lightbox-close { background: rgba(247, 238, 226, .12); color: #f7f2eb; }
