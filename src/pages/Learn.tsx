@@ -112,6 +112,15 @@ export default function Learn() {
           <a className="learn-inline-link" href="/">More about me <ArrowUpRight size={15} /></a>
         </div>
       </div>
+      <div className="learn-recognition">
+        <div className="learn-frame-stage"><figure className="learn-frame"><div className="learn-frame-mat"><img src="/learn/awwwards-mobile-excellence.jpg" alt="Awwwards and Google Mobile Excellence certificate awarded to the TEDxGEC website by Salil Naik, February 13, 2019" width={1100} height={1460} loading="lazy" /></div></figure></div>
+        <div className="learn-recognition-copy learn-reveal">
+          <Eyebrow>Recognition</Eyebrow>
+          <h3>Awwwards <em>×</em> Google<br />Mobile Excellence Award</h3>
+          <p>Awarded to the TEDxGEC website I built, for scoring highly on mobile friendliness, performance, best practices, and usability.</p>
+          <dl className="learn-recognition-meta"><div><dt>Project</dt><dd>TEDxGEC website</dd></div><div><dt>Awarded</dt><dd>Feb 13, 2019</dd></div><div><dt>By</dt><dd>Awwwards &amp; Google</dd></div></dl>
+        </div>
+      </div>
       <div className="learn-public-proof">
         <div className="learn-proof-heading"><Eyebrow>The work, out in the world</Eyebrow><p>A few milestones I’ve shared along the way.</p></div>
         <div className="learn-tweet-grid">{posts.map(post => <a className="learn-native-tweet learn-reveal" key={post.id} href={`https://x.com/0xSalilNaik/status/${post.id}`} target="_blank" rel="noreferrer">
