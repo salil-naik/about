@@ -388,6 +388,7 @@
 @media (max-width: 760px) {
   .learn-warm .learn-hint-desktop { display: none; }
   .learn-warm .learn-hint-mobile { display: inline; }
+  .learn-warm .learn-day-date, .learn-warm .learn-day-body, .learn-warm .learn-day-view { display: none; }
   .learn-warm .learn-days { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
   .learn-warm .learn-day, .learn-warm .learn-day.is-clickable:hover { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 0; aspect-ratio: 1 / 1.1; padding: 0; gap: 0; border-radius: 12px; transform: none; }
   .learn-warm .learn-day-mini { display: flex; flex-direction: column; align-items: center; gap: 1px; font: 500 16px/1.1 var(--display); color: var(--text); }
