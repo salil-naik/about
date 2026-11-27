@@ -369,6 +369,36 @@
 .learn-page .learn-award-copy strong { font: 500 18px/1.3 var(--display); letter-spacing: -.02em; }
 .learn-page .learn-award-copy > span:last-child { font-size: 13px; line-height: 1.5; color: var(--muted); }
 
+/* Award: clickable + lightbox */
+.learn-page .learn-award { position: relative; width: 100%; border: 0; color: inherit; font: inherit; text-align: left; cursor: zoom-in; transition: background .3s, box-shadow .3s; }
+.learn-page .learn-award:hover { background: var(--surface-2); box-shadow: 0 0 0 1px var(--line-strong) inset; }
+.learn-page .learn-award-open { position: absolute; top: 14px; right: 14px; color: var(--faint); transition: color .2s, transform .3s var(--ease); }
+.learn-page .learn-award:hover .learn-award-open { color: var(--accent); transform: scale(1.1); }
+.learn-page .learn-award-copy { padding-right: 24px; }
+.learn-page .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.learn-page .learn-lightbox {
+  width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 24px; border: 0;
+  display: none; place-items: center; background: transparent; color: var(--text); overflow: auto;
+}
+.learn-page .learn-lightbox[open] { display: grid; animation: learn-lightbox-in .45s var(--ease); }
+.learn-page .learn-lightbox::backdrop { background: rgba(5, 5, 8, .82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.learn-page .learn-lightbox-frame {
+  position: relative; width: min(460px, calc((100dvh - 140px) * .72), 100%); padding: 16px; border-radius: 4px;
+  background: linear-gradient(145deg, #2a2a30, #0d0d10 55%, #1f1f25);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .12) inset, 0 60px 120px -30px rgba(0, 0, 0, .95);
+  pointer-events: none;
+}
+.learn-page .learn-lightbox-mat { padding: 26px; background: #f1efea; box-shadow: 0 2px 6px rgba(0, 0, 0, .35) inset; pointer-events: auto; }
+.learn-page .learn-lightbox-mat img { display: block; width: 100%; height: auto; box-shadow: 0 3px 8px -2px rgba(0, 0, 0, .35); }
+.learn-page .learn-lightbox-frame figcaption { position: absolute; left: -120px; right: -120px; margin-top: 30px; text-align: center; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.learn-page .learn-lightbox-close {
+  position: fixed; top: 20px; right: 20px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 50%;
+  background: rgba(240, 241, 246, .1); color: var(--text); transition: background .2s;
+}
+.learn-page .learn-lightbox-close:hover { background: rgba(240, 241, 246, .2); }
+@keyframes learn-lightbox-in { from { opacity: 0; transform: scale(.96) translateY(12px); } }
+@media (max-width: 760px) { .learn-page .learn-lightbox-mat { padding: 14px; } .learn-page .learn-lightbox-frame { padding: 10px; } }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1020px) {
   .learn-page .learn-hero { grid-template-columns: 1fr; gap: 56px; padding-block: 72px 64px; }

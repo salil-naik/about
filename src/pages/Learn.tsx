@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { ArrowUpRight, Check, Code2, Globe, Layers, Heart, MessageCircle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight, Check, Code2, Maximize2, X, Globe, Layers, Heart, MessageCircle } from "lucide-react";
 import InterestForm from "../components/InterestForm";
 import "./learn.css";
 import posts from "./learn-posts.json";
@@ -59,6 +59,26 @@ function useLearnMotion() {
     return () => { window.removeEventListener("scroll", onScroll); reveal.disconnect(); spy.disconnect(); page?.classList.remove("learn-motion"); };
   }, []);
   return { scrolled, active };
+}
+
+function AwardCertificate() {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const close = () => dialog.current?.close();
+  return <>
+    <button type="button" className="learn-award" onClick={() => dialog.current?.showModal()} aria-haspopup="dialog">
+      <span className="learn-award-frame"><img src="/learn/awwwards-mobile-excellence.jpg" alt="" width={1100} height={1460} loading="lazy" /></span>
+      <span className="learn-award-copy"><span>Awwwards <em>×</em> Google · 2019</span><strong>Mobile Excellence Award</strong><span>For the TEDxGEC website I built — mobile friendliness, performance, and usability.</span></span>
+      <span className="learn-award-open" aria-hidden="true"><Maximize2 size={15} /></span>
+      <span className="sr-only">View certificate</span>
+    </button>
+    <dialog ref={dialog} className="learn-lightbox" aria-label="Awwwards and Google Mobile Excellence certificate" onClick={event => { if (event.target === event.currentTarget) close(); }}>
+      <figure className="learn-lightbox-frame">
+        <div className="learn-lightbox-mat"><img src="/learn/awwwards-mobile-excellence.jpg" alt="Awwwards and Google Mobile Excellence certificate awarded to the TEDxGEC website by Salil Naik, February 13, 2019" width={1100} height={1460} /></div>
+        <figcaption>Mobile Excellence Award · Awwwards × Google · Feb 13, 2019</figcaption>
+      </figure>
+      <button type="button" className="learn-lightbox-close" onClick={close} aria-label="Close certificate"><X size={18} /></button>
+    </dialog>
+  </>;
 }
 
 export default function Learn() {
@@ -130,10 +150,7 @@ export default function Learn() {
             <a href="https://bungee.exchange/" target="_blank" rel="noreferrer"><strong>$40B+</strong><span>Volume processed by Bungee Exchange</span><ArrowUpRight size={16} /></a>
             <div><strong>Polygon <em>&amp;</em> OpenSea Pro</strong><span>Products that have used my work</span></div>
           </div>
-          <div className="learn-award">
-            <span className="learn-award-frame"><img src="/learn/awwwards-mobile-excellence.jpg" alt="Awwwards and Google Mobile Excellence certificate for the TEDxGEC website, 2019" width={1100} height={1460} loading="lazy" /></span>
-            <span className="learn-award-copy"><span>Awwwards <em>×</em> Google · 2019</span><strong>Mobile Excellence Award</strong><span>For the TEDxGEC website I built — mobile friendliness, performance, and usability.</span></span>
-          </div>
+          <AwardCertificate />
           <a className="learn-inline-link" href="/">More about me <ArrowUpRight size={15} /></a>
         </div>
       </div>
