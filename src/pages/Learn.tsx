@@ -1,4 +1,4 @@
-import { ArrowUpRight, Check, X, Code2, FileText, Globe, LineChart, PenLine, Trophy, Video } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, X, Code2, FileText, Globe, LineChart, PenLine, Trophy, Video } from "lucide-react";
 import { useState } from "react";
 import InterestForm from "../components/InterestForm";
 import { companies, CTA, Eyebrow, InstructorSection, TestimonialsSection, useLearnMotion } from "./learn-parts";
@@ -10,6 +10,7 @@ import "./learn-warm.css";
 
 const START = Date.UTC(2026, 11, 4); // Day 1 · Friday, Dec 4, 2026
 const dayDate = (day: number) => new Date(START + (day - 1) * 864e5).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
+const dayParts = (day: number) => { const d = new Date(START + (day - 1) * 864e5); return { weekday: d.toLocaleDateString("en-US", { weekday: "narrow", timeZone: "UTC" }), date: d.getUTCDate() }; };
 
 type DayKind = "class" | "build" | "due" | "bonus" | "demo";
 // Each tile: [kind, small label, title]. Build days are deliberately empty: students build at their own pace.
@@ -31,11 +32,21 @@ const days: [DayKind, string?, string?][] = [
 ];
 
 const sessions = [
-  { day: 1, title: "From idea to product", copy: "Turn a real problem into a scoped plan with AI, then build a mini-project together.", topics: ["MVP scope", "AI-assisted PRD", "Flowcharts"], output: "A finished mini-project" },
-  { day: 3, quiz: true, title: "Design and engineer with AI", copy: "Give AI the right context, apply proven UX laws, and push your first deploy.", topics: ["Context & planning", "UX laws", "Git"], output: "Your capstone plan" },
-  { day: 5, title: "Building real-world products", copy: "APIs, databases and auth, plus the error states real users run into.", topics: ["APIs", "Databases & auth", "Error states"], output: "A core feature, end to end" },
-  { day: 8, quiz: true, title: "Make it reliable. Make it live.", copy: "Ship to your own domain, make it fast, and test it with real users.", topics: ["Vercel & domains", "Performance", "Testing"], output: "A live beta" },
-  { day: 11, title: "Understand users and improve", copy: "Read the analytics, learn from users, and ship a better version.", topics: ["Analytics", "User feedback", "Writing it up"], output: "A shipped improvement" },
+  { day: 1, title: "From idea to product", copy: "Turn a real problem into a scoped plan with AI, then build a mini-project together.", topics: ["MVP scope", "AI-assisted PRD", "Flowcharts"], output: "A finished mini-project",
+    learn: ["Find a real user problem and define what success looks like", "Scope an MVP: must-haves vs nice-to-haves", "Write a PRD, user journey and flowchart with AI", "Build, debug and explain a mini-project together"],
+    after: "Brainstorm 2–3 capstone ideas" },
+  { day: 3, quiz: true, title: "Design and engineer with AI", copy: "Give AI the right context, apply proven UX laws, and push your first deploy.", topics: ["Context & planning", "UX laws", "Git"], output: "Your capstone plan",
+    learn: ["Set up AI agents with plans, context files and constraints", "The UX laws behind good interfaces", "Design tokens, reusable components and task breakdown", "Build a feature, review the diff and push a preview"],
+    after: "Write your capstone one-pager and take the UX challenge" },
+  { day: 5, title: "Building real-world products", copy: "APIs, databases and auth, plus the error states real users run into.", topics: ["APIs", "Databases & auth", "Error states"], output: "A core feature, end to end",
+    learn: ["How browsers, servers and databases fit together", "APIs: requests, JSON, status codes and rate limits", "Data, auth and keeping secrets safe", "Loading, empty and error states, plus retries"],
+    after: "Build one core feature of your capstone end to end" },
+  { day: 8, quiz: true, title: "Make it reliable. Make it live.", copy: "Ship to your own domain, make it fast, and test it with real users.", topics: ["Vercel & domains", "Performance", "Testing"], output: "A live beta",
+    learn: ["Git branches, pull requests and rolling back safely", "Deploy from GitHub to Vercel on your own domain", "Make it fast with Lighthouse and Core Web Vitals", "Smoke tests and error reporting"],
+    after: "Launch your beta and watch three people use it" },
+  { day: 11, title: "Understand users and improve", copy: "Read the analytics, learn from users, and ship a better version.", topics: ["Analytics", "User feedback", "Writing it up"], output: "A shipped improvement",
+    learn: ["Metrics that matter vs vanity metrics", "Track events with Mixpanel, privacy first", "Build a funnel and find where people drop off", "Turn feedback into a shipped improvement"],
+    after: "Submit your project, blog and demo by Day 13" },
 ];
 
 const deliverables = [
@@ -78,7 +89,7 @@ export default function Learn() {
         <span className="learn-badge"><span className="learn-dot" /> 14 Days of Product Engineering · Starts Dec 4</span>
         <h1>Build with AI.<br />Ship your idea.<br /><em>Show your work.</em></h1>
         <p className="learn-lede">AI can write the code. Learn everything else it takes to ship a real product.</p>
-        <p className="learn-hero-for">For designers, PMs, founders and early developers who want to ship real products.</p>
+        <p className="learn-hero-for">For aspiring designers, PMs, founders and developers who want to ship real products.</p>
         <div className="learn-hero-actions"><CTA>Join the waitlist</CTA><a className="learn-ghost" href="#journey">See the course</a></div>
         <dl className="learn-hero-facts"><div><dt>Dates</dt><dd>Dec 4 – 17</dd></div><div><dt>Live</dt><dd>5 classes + 2 bonus</dd></div><div><dt>You build</dt><dd>Your own product</dd></div><div><dt>Cohort</dt><dd>50 seats</dd></div></dl>
       </div>
@@ -104,30 +115,44 @@ export default function Learn() {
 
     <section className="learn-section learn-wrap" id="journey">
       <div className="learn-section-heading learn-heading-row learn-reveal"><div><Eyebrow>The course</Eyebrow><h2>Five live classes.<br /><em>One product, shipped.</em></h2></div><dl className="learn-days-facts"><div><dt>Live classes</dt><dd>5 × 60 min</dd></div><div><dt>Building on your own time</dt><dd>14–21 hrs</dd></div><div><dt>Class times</dt><dd>Shared before enrollment</dd></div></dl></div>
-      <p className="learn-days-hint"><span aria-hidden="true">↓</span> Pick a live class to see what’s inside</p>
+      <p className="learn-days-hint"><span aria-hidden="true">↓</span> <span className="learn-hint-desktop">Pick a live class to see what’s inside</span><span className="learn-hint-mobile">Tap a class day to see what’s inside</span></p>
       <ol className="learn-days learn-reveal">{days.map(([kind, label, title], index) => {
         const sessionIndex = sessions.findIndex(session => session.day === index + 1);
         const session = sessions[sessionIndex];
         const isSelected = sessionIndex === selected;
         return <li key={index} className={`learn-day is-${kind}${session ? " is-clickable" : ""}${isSelected ? " is-selected" : ""}`}>
           <span className="learn-day-date">{dayDate(index + 1)}</span>
-          {label ? <div className="learn-day-body"><span>{label}</span><b>{title}</b></div> : <span className="learn-day-empty">Build day</span>}
+          <span className="learn-day-mini" aria-hidden="true"><i>{dayParts(index + 1).weekday}</i>{dayParts(index + 1).date}</span>
+          {label ? <div className="learn-day-body"><span>{label}</span><b>{title}</b></div> : <span className="sr-only">Build day</span>}
           {session && !isSelected && <span className="learn-day-view" aria-hidden="true">View <ArrowUpRight size={12} /></span>}
           {session && <>
             <button type="button" className="learn-day-hit" onClick={() => setSelected(sessionIndex)} aria-pressed={isSelected} aria-controls="class-detail"><span className="sr-only">Show details for {label}: {session.title}</span></button>
-            {isSelected && <div className="learn-day-detail"><p>{session.copy}</p><div className="learn-topics">{session.topics.map(topic => <span key={topic}>{topic}</span>)}</div><span className="learn-day-output">You leave with <b>{session.output}</b></span></div>}
           </>}
         </li>;
       })}</ol>
+      <ul className="learn-days-legend" aria-hidden="true"><li className="is-class">Live class</li><li className="is-due">Deadline</li><li className="is-bonus">Free bonus</li><li className="is-build">Build day</li><li className="is-demo">Demo day</li></ul>
       <div className="learn-class-panel learn-reveal" id="class-detail" aria-live="polite">
-        <div key={selected} className="learn-class-panel-inner">
+        <div className="learn-class-head">
           <div>
-            <span className="learn-class-meta">Class {selected + 1} · {dayDate(current.day)}{current.quiz && <i>+ Quiz</i>}</span>
+            <span className="learn-class-meta">Class {selected + 1} of 5 · {dayDate(current.day)}{current.quiz && <i>+ Quiz</i>}</span>
             <h3>{current.title}</h3>
             <p>{current.copy}</p>
-            <div className="learn-topics">{current.topics.map(topic => <span key={topic}>{topic}</span>)}</div>
           </div>
-          <div className="learn-session-output"><span>You leave with</span><strong>{current.output}</strong></div>
+          <div className="learn-class-nav">
+            <button type="button" onClick={() => setSelected(selected - 1)} disabled={selected === 0} aria-label="Previous class"><ArrowLeft size={16} /></button>
+            <div className="learn-class-dots">{sessions.map((session, index) => <button key={session.title} type="button" className={index === selected ? "is-active" : undefined} onClick={() => setSelected(index)} aria-label={`Class ${index + 1}: ${session.title}`} aria-current={index === selected ? "true" : undefined} />)}</div>
+            <button type="button" onClick={() => setSelected(selected + 1)} disabled={selected === sessions.length - 1} aria-label="Next class"><ArrowRight size={16} /></button>
+          </div>
+        </div>
+        <div key={selected} className="learn-class-panel-inner">
+          <div>
+            <h4 className="learn-learn-title">What you’ll learn</h4>
+            <ol className="learn-learn-steps">{current.learn.map((item, index) => <li key={item}><span>0{index + 1}</span>{item}</li>)}</ol>
+          </div>
+          <div className="learn-class-side">
+            <div><span>You leave with</span><strong>{current.output}</strong></div>
+            <div><span>After class</span><strong>{current.after}</strong></div>
+          </div>
         </div>
       </div>
     </section>
