@@ -14,7 +14,7 @@ const sessions = [
 ];
 const questions = [
   ["Do I need to know how to code?", "No prior coding experience is required. You’ll learn to describe what you want, direct the tools, and check their output. You do need a laptop and a willingness to experiment."],
-  ["When does the first cohort start?", "Dates, time zone, and the class schedule will be announced before enrollment opens. Joining the waitlist is free and doesn’t reserve or purchase a seat."],
+  ["When does the first cohort start?", "The first cohort starts on Friday, December 4, 2026. Class times, time zone, and the full schedule will be shared before enrollment opens. Joining the waitlist is free and doesn’t reserve or purchase a seat."],
   ["How much time should I set aside?", "There are five one-hour live classes. You’ll also need time between sessions to build your project. The suggested weekly workload will be shared with the final schedule."],
   ["What if I miss a class?", "Recording access and how long materials remain available are still being finalized. These details will be confirmed before you pay."],
   ["Will I need paid AI tools?", "We’ll cover free alternatives as well as paid tools. Any required subscriptions or hosting costs will be disclosed before enrollment; they are not included in the course price."],
@@ -63,7 +63,7 @@ export default function Learn() {
     <div className="learn-ambient" aria-hidden="true" />
     <header className={`learn-nav${scrolled ? " is-scrolled" : ""}`}>
       <div className="learn-wrap learn-nav-inner">
-        <a href="/" className="learn-brand" aria-label="Salil Naik — Learn"><span className="learn-mark">S</span><span>Salil</span><em>Learn</em></a>
+        <a href="/" className="learn-brand" aria-label="Learn with Salil"><span>Learn <em>with</em> Salil</span></a>
         <nav aria-label="Learn navigation">{navLinks.map(([id, label]) => <a key={id} href={`#${id}`} className={active === id ? "is-active" : undefined} aria-current={active === id ? "true" : undefined}>{label}</a>)}</nav>
         <a href="#interest" className="learn-nav-cta">Join the waitlist <ArrowUpRight size={14} /></a>
       </div>
@@ -71,14 +71,14 @@ export default function Learn() {
 
     <section className="learn-hero learn-wrap">
       <div className="learn-hero-copy learn-reveal">
-        <span className="learn-badge"><span className="learn-dot" /> First cohort · Enrollment opening soon</span>
+        <span className="learn-badge"><span className="learn-dot" /> First cohort · Starts Friday, Dec 4</span>
         <h1>Build with AI.<br />Ship your idea.<br /><em>Show your work.</em></h1>
         <p className="learn-lede">Go from an idea to a working project and a portfolio website—in five live classes. Learn the practical workflow for building with AI, even if you’ve never written code.</p>
         <div className="learn-hero-actions"><CTA>Join the waitlist</CTA><a className="learn-ghost" href="#curriculum">See the five classes</a></div>
-        <dl className="learn-hero-facts"><div><dt>Format</dt><dd>5 live classes</dd></div><div><dt>Length</dt><dd>1 hour each</dd></div><div><dt>Cohort</dt><dd>50 seats</dd></div></dl>
+        <dl className="learn-hero-facts"><div><dt>Starts</dt><dd>Dec 4, 2026</dd></div><div><dt>Format</dt><dd>5 live classes</dd></div><div><dt>Length</dt><dd>1 hour each</dd></div><div><dt>Cohort</dt><dd>50 seats</dd></div></dl>
       </div>
       <aside className="learn-enrollment learn-reveal" style={{ ["--d" as string]: ".12s" }}>
-        <div className="learn-card-label"><span>First cohort</span><span>Dates TBA</span></div>
+        <div className="learn-card-label"><span>First cohort</span><span>Starts Dec 4</span></div>
         <div className="learn-price"><span className="learn-price-currency">$</span>100<span className="learn-price-note">for all five<br />live classes</span></div>
         <ul>
           <li><Check size={15} /> Five live, practical sessions</li>
@@ -175,10 +175,10 @@ export default function Learn() {
 
     <section className="learn-section learn-interest" id="interest">
       <div className="learn-wrap learn-interest-grid">
-        <div><span className="learn-badge"><span className="learn-dot" /> First cohort · Coming soon</span><h2>Your idea deserves<br /><em>a first version.</em></h2><p>Join the waitlist for the schedule and enrollment details. We’ll start with a small cohort of 50 people.</p><div className="learn-interest-facts"><span>5 live classes</span><span>$100 total</span><span>No payment today</span></div></div>
+        <div><span className="learn-badge"><span className="learn-dot" /> First cohort · Starts Dec 4</span><h2>Your idea deserves<br /><em>a first version.</em></h2><p>The first cohort of 50 starts on December 4. Join the waitlist for the full schedule and enrollment details.</p><div className="learn-interest-facts"><span>Starts Dec 4</span><span>5 live classes</span><span>$100 total</span><span>No payment today</span></div></div>
         <div className="learn-reveal" style={{ ["--d" as string]: ".1s" }}><InterestForm /></div>
       </div>
     </section>
-    <footer className="learn-footer learn-wrap"><a className="learn-brand" href="/"><span className="learn-mark">S</span><span>Salil</span><em>Learn</em></a><span>Build something you’re proud to share.</span><a href="#top">Back to top ↑</a></footer>
+    <footer className="learn-footer learn-wrap"><a className="learn-brand" href="/"><span>Learn <em>with</em> Salil</span></a><span>Build something you’re proud to share.</span><a href="#top">Back to top ↑</a></footer>
   </main>;
 }
