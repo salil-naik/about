@@ -9,7 +9,10 @@ export async function submitInterest(body: unknown, config: WaitlistConfig, fetc
   if (data.website) return { status: 200, body: { ok: true } };
   const name = typeof data.name === "string" ? data.name.trim() : "";
   const email = typeof data.email === "string" ? data.email.trim().toLowerCase() : "";
+  const whatsapp = typeof data.whatsapp === "string" ? data.whatsapp.trim() : "";
+  const whatsappDigits = whatsapp.replace(/\D/g, "");
   if (!name || name.length > 100 || /[\x00-\x1f]/.test(name) || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+    !/^\+[\d ()-]+$/.test(whatsapp) || whatsappDigits.length < 8 || whatsappDigits.length > 15 ||
     typeof data.experience !== "string" || !["new", "some", "building"].includes(data.experience) ||
     typeof data.course !== "string" || !["building", "motion", "both"].includes(data.course) || data.consent !== "yes") {
     return { status: 400, body: { error: "Please check your details and try again." } };
@@ -21,7 +24,7 @@ export async function submitInterest(body: unknown, config: WaitlistConfig, fetc
     const response = await fetcher(new URL("/api/interest", target), {
       method: "POST", redirect: "error", signal: AbortSignal.timeout(15000),
       headers: { "Content-Type": "application/json", "OAI-Sites-Authorization": `Bearer ${config.serviceToken}`, "Authorization": `Bearer ${config.writeKey}` },
-      body: JSON.stringify({ name, email, experience: data.experience, course: data.course, consent: "yes" }),
+      body: JSON.stringify({ name, email, whatsapp: `+${whatsappDigits}`, experience: data.experience, course: data.course, consent: "yes" }),
     });
     if (!response.ok || !response.headers.get("content-type")?.includes("application/json")) throw new Error("Backend unavailable");
     const result = await response.json();

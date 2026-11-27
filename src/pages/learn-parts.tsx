@@ -6,7 +6,7 @@ import testimonials from "./learn-testimonials.json";
 
 export const companies = [["Socket", "https://socket.tech/", "socket"], ["Bungee Exchange", "https://bungee.exchange/", "bungee"], ["Polygon", "https://polygon.technology/", "polygon"]];
 
-export function CTA({ children = "Join the first-cohort waitlist", className = "" }: { children?: React.ReactNode; className?: string }) {
+export function CTA({ children = "Join the waitlist", className = "" }: { children?: React.ReactNode; className?: string }) {
   return <a className={`learn-cta ${className}`} href="#interest"><span>{children}</span><ArrowUpRight size={17} /></a>;
 }
 export function Eyebrow({ index, children }: { index?: string; children: React.ReactNode }) {

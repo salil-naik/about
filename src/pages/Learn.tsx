@@ -55,17 +55,18 @@ const deliverables = [
   [LineChart, "Proof it works", "Three user tests, performance checks, an analytics funnel and one shipped improvement."],
   [PenLine, "Your story", "A short technical blog or case study, a recorded demo, and an optional portfolio."],
 ] as const;
-const ideas = ["3D room planner", "Trading simulator", "Collaborative whiteboard", "Gamified learning app", "Trip planner", "Music maker", "Physics playground", "Photo editor"];
+const ideas = ["Real-time multiplayer whiteboard", "AI research agent with citations", "Onchain prediction market", "Multi-chain portfolio tracker", "Browser-based music studio", "3D room planner", "Live flight tracker", "Paper-trading simulator with live prices", "Voice AI interview coach", "Multiplayer browser game"];
 
 const questions = [
   ["Do I need to know how to code?", "No prior coding experience is required, but this is a hands-on, technical course. You’ll work with an editor, Git, APIs and deployment, with AI helping you write and understand the code. A setup guide is shared before Day 1 so you start ready."],
-  ["When does the first cohort start?", "Day 1 is Friday, December 4, 2026, and demo day is Thursday, December 17. Class times and time zone will be shared before enrollment opens. Joining the waitlist is free and doesn’t reserve or purchase a seat."],
+  ["When does the introductory cohort start?", "Day 1 is Friday, December 4, 2026, and demo day is Thursday, December 17. Class times and time zone will be shared before enrollment opens. Joining the waitlist is free and doesn’t reserve or purchase a seat."],
   ["How much time should I set aside?", "Five one-hour live classes and demo day, plus two optional bonus workshops. Between classes, plan for about 14–21 hours of building across the two weeks. Short quizzes follow classes 2 and 4."],
   ["What are the bonus workshops?", "Two free, optional 60-minute workshops on Days 6 and 9, open to everyone. The topics will be revealed during the cohort."],
+  ["What kind of product can I build?", "Anything that runs on the web and that you care about: an AI agent, a real-time collaborative app, an onchain app, a data-heavy dashboard, a 3D or creative tool. Aim for something with real technical depth. We’ll scope it together in the first two classes so it ships in 14 days."],
   ["How does demo day work?", "By Day 13, everyone submits their live project, a short write-up and a recorded demo, and gets feedback. On Day 14, ten shortlisted builders demo live, and awards go to the best product and the best blog."],
   ["What if I miss a class?", "Recording access and how long materials remain available are still being finalized. These details will be confirmed before you pay."],
   ["Will I need paid AI tools?", "We’ll cover free options as well as paid tools. Any required subscriptions or hosting costs will be disclosed before enrollment; they are not included in the course price."],
-  ["What’s the refund policy?", "If you enroll and aren’t satisfied, you can request a full refund after the first two classes, before class 3 begins on Day 5. No refunds are available after that."],
+  ["When do I pay, and are there refunds?", "Classes 1 and 2 are free. Use them to decide whether the material and instructor suit you. Pay $49 for the introductory cohort before class 3 to access the rest of the course. Because you pay after trying the first two classes, payments are non-refundable."],
 ];
 
 const nav = [["journey", "Course"], ["capstone", "Demo day"], ["instructor", "Instructor"], ["questions", "FAQ"]];
@@ -91,11 +92,12 @@ export default function Learn() {
         <p className="learn-lede">AI can write the code. Learn everything else it takes to ship a real product.</p>
         <p className="learn-hero-for">For aspiring designers, PMs, founders and developers who want to ship real products.</p>
         <div className="learn-hero-actions"><CTA>Join the waitlist</CTA><a className="learn-ghost" href="#journey">See the course</a></div>
-        <dl className="learn-hero-facts"><div><dt>Dates</dt><dd>Dec 4 – 17</dd></div><div><dt>Live</dt><dd>5 classes + 2 bonus</dd></div><div><dt>You build</dt><dd>Your own product</dd></div><div><dt>Cohort</dt><dd>50 seats</dd></div></dl>
+        <dl className="learn-hero-facts"><div><dt>Dates</dt><dd>Dec 4 – 17</dd></div><div><dt>Live</dt><dd>5 classes + 2 bonus</dd></div><div><dt>You build</dt><dd>Your own product</dd></div><div><dt>Start</dt><dd>First 2 classes free</dd></div></dl>
       </div>
       <aside className="learn-enrollment learn-reveal" style={{ ["--d" as string]: ".12s" }}>
-        <div className="learn-card-label"><span>First cohort</span><span>Dec 4 – 17</span></div>
-        <div className="learn-price"><span className="learn-price-currency">$</span>100<span className="learn-price-note">for the full<br />14-day program</span></div>
+        <div className="learn-card-label"><span>Introductory cohort</span><span>Dec 4 – 17</span></div>
+        <div className="learn-price"><span className="learn-price-currency">$</span>49<span className="learn-price-note"><s className="learn-price-was" aria-label="Was $100">$100</s>introductory price</span></div>
+        <p className="learn-price-timing">Try classes 1 and 2 free. Pay only if you want to continue.</p>
         <ul>
           <li><Check size={15} /> 5 live classes + 2 bonus workshops</li>
           <li><Check size={15} /> Your own product, live on the web</li>
@@ -103,7 +105,7 @@ export default function Learn() {
           <li><Check size={15} /> Demo day with awards</li>
         </ul>
         <CTA />
-        <small>Free to join. No payment or commitment.</small>
+        <small>Join the waitlist free. Payment is due before class 3.</small>
         <div className="learn-enrollment-footer"><Code2 size={16} /><p>Taught by the engineer leading development at <a href="https://x.com/BungeeExchange" target="_blank" rel="noreferrer">Bungee Exchange</a></p></div>
       </aside>
     </section>
@@ -181,8 +183,8 @@ export default function Learn() {
           <div className="is-no"><h3><span><X size={16} strokeWidth={2.2} /></span> What this isn’t</h3><ul>{["A done-for-you build. Your capstone is yours to make.", "A full software engineering degree in five hours.", "A course where AI does it all. You’ll check and iterate.", "A job placement or income guarantee."].map(item => <li key={item}><X size={15} strokeWidth={2.2} />{item}</li>)}</ul></div>
         </div>
         <div className="learn-policy-row learn-reveal">
-          <div><span>Price</span><strong>$100 for the full program</strong><p>All five classes, feedback on your project and demo day. Any required tool or hosting costs will be shared before enrollment.</p></div>
-          <div><span>Refunds</span><strong>Try the first two classes</strong><p>Request a full refund after class 2, before class 3 begins on Day 5. No refunds after that.</p></div>
+          <div><span>Introductory price</span><strong>$49 <s>$100</s></strong><p>The first two classes are free. Pay before class 3 to access the remaining classes, project feedback and demo day. Any required tool or hosting costs will be shared before you pay.</p></div>
+          <div><span>Try before you pay</span><strong>See if it suits you</strong><p>Attend the first two classes to assess the material and instructor. If you continue, your $49 payment is non-refundable.</p></div>
           <div><span>Awards</span><strong>Best Product & Best Blog</strong><p>Products are judged on usefulness, UX, engineering, originality and iteration. Blogs on clarity and insight.</p></div>
         </div>
       </div>
@@ -195,10 +197,10 @@ export default function Learn() {
 
     <section className="learn-section learn-interest" id="interest">
       <div className="learn-wrap learn-interest-grid">
-        <div><span className="learn-badge"><span className="learn-dot" /> First cohort · Dec 4 – 17</span><h2>Your idea deserves<br /><em>a first version.</em></h2><p>Fourteen days, five live classes, one product you ship. The first cohort of 50 starts December 4. Join the waitlist to get the schedule and enrollment details first.</p><div className="learn-interest-facts"><span>Dec 4 – 17</span><span>5 classes + 2 bonus</span><span>$100 total</span><span>No payment today</span></div></div>
+        <div><span className="learn-badge"><span className="learn-dot" /> Introductory cohort · Dec 4 – 17</span><h2>Your idea deserves<br /><em>a first version.</em></h2><p>Fourteen days, five live classes, one product you ship. Join the waitlist for the schedule and enrollment details. Attend the first two classes free, then decide whether to continue.</p><div className="learn-interest-facts"><span>Dec 4 – 17</span><span>First 2 classes free</span><span>$49 <s>$100</s> to continue</span><span>No payment today</span></div></div>
         <div className="learn-reveal" style={{ ["--d" as string]: ".1s" }}><InterestForm /></div>
       </div>
     </section>
-    <footer className="learn-footer learn-wrap"><a className="learn-brand" href="/"><span>Learn <em>with</em> Salil</span></a><span>14 Days of Product Engineering · First cohort Dec 4 – 17</span><a href="#top">Back to top ↑</a></footer>
+    <footer className="learn-footer learn-wrap"><a className="learn-brand" href="/"><span>Learn <em>with</em> Salil</span></a><span>14 Days of Product Engineering · Introductory cohort Dec 4 – 17</span><a href="#top">Back to top ↑</a></footer>
   </main>;
 }

@@ -12,7 +12,7 @@ try {
   const outfile = join(temp, 'waitlist.mjs');
   await build({entryPoints:['server/waitlist.ts'],outfile,bundle:true,platform:'node',format:'esm'});
   const {submitInterest,handleInterest} = await import(pathToFileURL(outfile));
-  const valid={name:'Test Builder',email:'  TEST@example.invalid ',experience:'new',course:'building',consent:'yes'};
+  const valid={name:'Test Builder',email:'  TEST@example.invalid ',whatsapp:'+1 (555) 123-4567',experience:'new',course:'building',consent:'yes'};
   const config={url:'https://test.chatgpt.site',serviceToken:'test-service-token',writeKey:'test-write-key'};
   let calls=0;
   const success=async (url, options)=>{
@@ -21,9 +21,10 @@ try {
     assert.equal(options.headers['OAI-Sites-Authorization'],'Bearer test-service-token');
     assert.equal(options.headers.Authorization,'Bearer test-write-key');
     assert.equal(JSON.parse(options.body).email,'test@example.invalid');
+    assert.equal(JSON.parse(options.body).whatsapp,'+15551234567');
     return Response.json({ok:true});
   };
-  for(const body of [null,[],{}, {...valid,consent:'no'}, {...valid,email:'bad'}, {...valid,experience:'bad'}, {...valid,name:'x'.repeat(101)}]) {
+  for(const body of [null,[],{}, {...valid,consent:'no'}, {...valid,email:'bad'}, {...valid,whatsapp:'5551234567'}, {...valid,whatsapp:'+123'}, {...valid,experience:'bad'}, {...valid,name:'x'.repeat(101)}]) {
     assert.equal((await submitInterest(body,config,success)).status,400);
   }
   assert.equal(calls,0);
@@ -46,13 +47,15 @@ try {
   assert.equal((await request('POST','x'.repeat(8193))).status,413);
   // Verify the deployed SQL's uniqueness and the API's upsert policy using SQLite.
   const migration=await readFile('services/learn-waitlist/drizzle/0000_good_wallflower.sql','utf8');
+  const addWhatsapp=await readFile('services/learn-waitlist/drizzle/0001_little_blur.sql','utf8');
   const sqlite=spawnSync('python3',['-c',`import sqlite3,sys
-c=sqlite3.connect(':memory:');c.executescript(sys.stdin.read())
+c=sqlite3.connect(':memory:');c.executescript(sys.stdin.read().replace('--> statement-breakpoint',''))
 sql='INSERT INTO interests(email,name,experience,course,consent,consent_text,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(email) DO UPDATE SET name=excluded.name,updated_at=excluded.updated_at'
 c.execute(sql,('test@example.invalid','First','new','building','yes','consent','first','first'))
 c.execute(sql,('test@example.invalid','Updated','new','building','yes','consent','second','second'))
 assert c.execute('SELECT count(*),name,created_at,updated_at FROM interests').fetchone()==(1,'Updated','first','second')
-`],{input:migration,encoding:'utf8'});
+assert c.execute('SELECT whatsapp FROM interests').fetchone()==(None,)
+`],{input:migration+'\n'+addWhatsapp,encoding:'utf8'});
   assert.equal(sqlite.status,0,sqlite.stderr);
   console.log('Waitlist checks passed: validation, private forwarding, save acknowledgments, failure handling, request limits, and duplicate-email storage.');
 } finally { await rm(temp,{recursive:true,force:true}); }

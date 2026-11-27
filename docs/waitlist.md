@@ -20,7 +20,7 @@ Restart Vite after changing environment variables. Deploy the personal website a
 
 ## Storage and access
 
-The service source is in `services/learn-waitlist`, with its own Sites source repository and `.openai/hosting.json` identity. D1 table `interests` stores name, normalized email, experience, course interest, consent text, consent, creation time, and last update time. Repeated signups update the existing email's row without resetting its first signup time.
+The service source is in `services/learn-waitlist`, with its own Sites source repository and `.openai/hosting.json` identity. D1 table `interests` stores name, normalized email, WhatsApp number (including country code), experience, course interest, consent text, consent, creation time, and last update time. Repeated signups update the existing email's row without resetting its first signup time.
 
 The Site remains owner-private. Its dashboard requires ChatGPT sign-in, and `/api/export` provides a CSV export only to a signed-in viewer. Public-site submissions go through the private API using server credentials. Neither the personal website nor the browser has a public read endpoint for signup data.
 

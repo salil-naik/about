@@ -68,6 +68,13 @@
 .learn-warm .learn-enrollment::before { background: linear-gradient(160deg, rgba(var(--warm-rgb), .55), rgba(var(--warm-rgb), 0) 42%, rgba(247, 238, 226, .08) 85%); }
 .learn-warm .learn-enrollment li svg, .learn-warm .learn-enrollment-footer svg { color: var(--warm); }
 .learn-warm .learn-enrollment-footer a { text-decoration-color: rgba(var(--warm-rgb), .55); }
+.learn-warm .learn-price-note s, .learn-warm .learn-policy-row s, .learn-warm .learn-interest-facts s { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--warm); text-decoration-thickness: 2px; }
+.learn-warm .learn-policy-row s { margin-left: 6px; font-weight: 400; }
+.learn-warm .learn-price-note .learn-price-was { display: block; margin-bottom: 4px; font: 400 26px/1 var(--display); letter-spacing: -.03em; }
+.learn-warm .learn-price-timing { margin-top: 20px; color: var(--soft); font-size: 14px; line-height: 1.5; }
+.learn-warm .form-card .form-field-hint { text-align: left; margin-top: 7px; color: var(--muted); }
+.learn-warm .learn-price-timing, .learn-warm .learn-enrollment > small { text-wrap: pretty; }
+.learn-warm .learn-enrollment > small { color: var(--muted); text-wrap: balance; }
 
 /* ---------- Ambient, nav, buttons ---------- */
 .learn-warm .learn-ambient {
