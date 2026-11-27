@@ -473,3 +473,8 @@
   .learn-page *, .learn-page *::before, .learn-page *::after { animation: none !important; transition: none !important; }
   .learn-page.learn-motion .learn-reveal { opacity: 1; transform: none; }
 }
+
+/* Optical sizing: the all-caps Socket wordmark reads larger than the others at the same height */
+.learn-page .learn-company-logos img[src*="socket"] { height: 16px; }
+.learn-page .learn-company-logos img[src*="bungee"] { height: 21px; }
+@media (max-width: 760px) { .learn-page .learn-company-logos img[src*="socket"] { height: 12.5px; } }
