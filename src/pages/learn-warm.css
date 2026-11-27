@@ -450,3 +450,36 @@
   .learn-warm .learn-ideas > div span { font-size: 12.5px; padding: 4px 10px; }
   .learn-warm .learn-footer { padding-block: 28px; }
 }
+
+/* ---------- Compact proof cards (Salil's posts) ---------- */
+.learn-warm .learn-proof { margin-top: 72px; }
+.learn-warm .learn-proof .learn-proof-heading { margin-bottom: 20px; }
+.learn-warm .learn-proof-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.learn-warm .learn-proof-card {
+  display: flex; flex-direction: column; gap: 10px; padding: 22px 22px 18px; border-radius: 18px;
+  background: var(--raised); box-shadow: 0 0 0 1px var(--line) inset; transition: background .3s, box-shadow .3s, transform .3s var(--ease);
+}
+.learn-warm .learn-proof-card:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 0 0 1px var(--line-strong) inset, 0 20px 40px -30px var(--shadow); }
+.learn-warm .learn-proof-card strong { font: 500 17px/1.3 var(--display); letter-spacing: -.015em; }
+.learn-warm .learn-proof-card p { font-size: 14.5px; line-height: 1.6; color: var(--muted); white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.learn-warm .learn-proof-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); }
+.learn-warm .learn-proof-foot span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.learn-warm .learn-proof-foot img { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; }
+.learn-warm .learn-proof-card:hover .learn-proof-foot span:last-child { color: var(--warm); }
+@media (max-width: 1020px) { .learn-warm .learn-proof-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 760px) {
+  .learn-warm .learn-proof { margin-top: 48px; }
+  .learn-warm .learn-proof-grid { grid-template-columns: 1fr; gap: 10px; }
+  .learn-warm .learn-proof-card { padding: 18px; }
+}
+
+/* Proof cards v2 + impact */
+.learn-warm .learn-proof-card { gap: 8px; padding: 22px; }
+.learn-warm .learn-proof-logo { width: 32px; height: 32px; margin-bottom: 10px; border-radius: 9px; object-fit: cover; }
+.learn-warm .learn-proof-logo.is-wordmark { width: auto; height: 20px; max-width: 120px; border-radius: 0; object-fit: contain; margin: 6px 0 16px; }
+.learn-warm .learn-proof-card p { -webkit-line-clamp: unset; display: block; }
+.learn-warm .learn-proof-foot { margin-top: auto; padding-top: 14px; }
+.learn-warm .learn-proof-foot span:first-child { font-variant-numeric: tabular-nums; }
+.learn-warm .learn-impact > a strong { color: var(--warm); }
+.learn-warm .learn-award-copy > span:first-child { color: var(--warm); }
+.learn-warm .learn-proof-logo { align-self: flex-start; object-position: left center; }

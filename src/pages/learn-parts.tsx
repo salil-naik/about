@@ -1,6 +1,7 @@
 // Shared building blocks for the Learn page.
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Maximize2, X } from "lucide-react";
+import posts from "./learn-posts.json";
 import testimonials from "./learn-testimonials.json";
 
 export const companies = [["Socket", "https://socket.tech/", "socket"], ["Bungee Exchange", "https://bungee.exchange/", "bungee"], ["Polygon", "https://polygon.technology/", "polygon"]];
@@ -56,6 +57,13 @@ export function AwardCertificate() {
   </>;
 }
 
+// How each of Salil's posts is presented, keyed by post id (the post itself stays the linked source)
+const postCards: Record<string, { headline: string; line: string; logo: string; logoAlt: string }> = {
+  "1720137380546728202": { headline: "Shipped inside OpenSea Pro", line: "My cross-chain plugin went live inside OpenSea Pro.", logo: "https://pbs.twimg.com/profile_images/1645495708613582860/zD973AUI_normal.png", logoAlt: "OpenSea Pro" },
+  "1737111857532649735": { headline: "Powering Polygon Portal", line: "From contributing to Polygon’s widget to building the Socket Plugin that now runs Polygon Portal.", logo: "/learn/logos/polygon.svg", logoAlt: "Polygon" },
+  "1993640977370943615": { headline: "Used by Vitalik Buterin", line: "Spotted: Vitalik swapping on Bungee, the product I lead development for.", logo: "/learn/logos/bungee.svg", logoAlt: "Bungee" },
+};
+
 export function InstructorSection() {
   return <section className="learn-section learn-wrap" id="instructor">
     <div className="learn-section-heading learn-reveal"><Eyebrow>Your instructor</Eyebrow><h2>Learn from someone<br />who <em>builds for a living.</em></h2></div>
@@ -72,6 +80,15 @@ export function InstructorSection() {
         <AwardCertificate />
         <a className="learn-inline-link" href="/">More about me <ArrowUpRight size={15} /></a>
       </div>
+    </div>
+    <div className="learn-proof">
+      <div className="learn-proof-heading"><Eyebrow>The work, out in the world</Eyebrow><p>A few milestones I’ve shared along the way.</p></div>
+      <div className="learn-proof-grid">{posts.map(post => { const card = postCards[post.id]; return <a className="learn-proof-card learn-reveal" key={post.id} href={`https://x.com/0xSalilNaik/status/${post.id}`} target="_blank" rel="noreferrer">
+        <img className={`learn-proof-logo${card.logo.endsWith(".svg") ? " is-wordmark" : ""}`} src={card.logo} alt={card.logoAlt} loading="lazy" />
+        <strong>{card.headline}</strong>
+        <p>{card.line}</p>
+        <div className="learn-proof-foot"><span>{new Date(post.date).getUTCFullYear()}</span><span>Read the post on 𝕏 <ArrowUpRight size={13} /></span></div>
+      </a>; })}</div>
     </div>
   </section>;
 }
