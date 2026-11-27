@@ -67,6 +67,7 @@ const questions = [
   ["What if I miss a class?", "Recording access and how long materials remain available are still being finalized. These details will be confirmed before you pay."],
   ["Will I need paid AI tools?", "We’ll cover free options as well as paid tools. Any required subscriptions or hosting costs will be disclosed before enrollment; they are not included in the course price."],
   ["When do I pay, and are there refunds?", "Classes 1 and 2 are free. Use them to decide whether the material and instructor suit you. Pay $49 for the introductory cohort before class 3 to access the rest of the course. Because you pay after trying the first two classes, payments are non-refundable."],
+  ["How do I pay?", "This cohort accepts crypto only: $49 in USDC or USDT on the Base network. You pay the network (gas) fee, which on Base is usually a few cents. Payment details are shared before class 3."],
 ];
 
 const nav = [["journey", "Course"], ["capstone", "Demo day"], ["instructor", "Instructor"], ["questions", "FAQ"]];
@@ -105,7 +106,7 @@ export default function Learn() {
           <li><Check size={15} /> Demo day with awards</li>
         </ul>
         <CTA />
-        <small>Join the waitlist free. Payment is due before class 3.</small>
+        <small>Join the waitlist free. Pay before class 3 in USDC or USDT on Base.</small>
         <div className="learn-enrollment-footer"><Code2 size={16} /><p>Taught by the engineer leading development at <a href="https://x.com/BungeeExchange" target="_blank" rel="noreferrer">Bungee Exchange</a></p></div>
       </aside>
     </section>
@@ -183,7 +184,7 @@ export default function Learn() {
           <div className="is-no"><h3><span><X size={16} strokeWidth={2.2} /></span> What this isn’t</h3><ul>{["A done-for-you build. Your capstone is yours to make.", "A full software engineering degree in five hours.", "A course where AI does it all. You’ll check and iterate.", "A job placement or income guarantee."].map(item => <li key={item}><X size={15} strokeWidth={2.2} />{item}</li>)}</ul></div>
         </div>
         <div className="learn-policy-row learn-reveal">
-          <div><span>Introductory price</span><strong>$49 <s>$100</s></strong><p>The first two classes are free. Pay before class 3 to access the remaining classes, project feedback and demo day. Any required tool or hosting costs will be shared before you pay.</p></div>
+          <div><span>Introductory price</span><strong>$49 <s>$100</s></strong><p>The first two classes are free. Pay before class 3, in USDC or USDT on Base, to access the remaining classes, project feedback and demo day. Any required tool or hosting costs will be shared before you pay.</p></div>
           <div><span>Try before you pay</span><strong>See if it suits you</strong><p>Attend the first two classes to assess the material and instructor. If you continue, your $49 payment is non-refundable.</p></div>
           <div><span>Awards</span><strong>Best Product & Best Blog</strong><p>Products are judged on usefulness, UX, engineering, originality and iteration. Blogs on clarity and insight.</p></div>
         </div>
