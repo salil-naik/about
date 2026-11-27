@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Check, Code2, Play, Globe, Layers, Heart, MessageCircle } from "lucide-react";
+import { ArrowUpRight, Check, Code2, Globe, Layers, Heart, MessageCircle } from "lucide-react";
 import InterestForm from "../components/InterestForm";
 import "./learn.css";
 import posts from "./learn-posts.json";
@@ -35,13 +35,17 @@ function Eyebrow({ index, children }: { index?: string; children: React.ReactNod
   return <span className="learn-eyebrow">{index && <span className="learn-eyebrow-index">{index}</span>}{children}</span>;
 }
 
-const navLinks = [["instructor", "Instructor"], ["curriculum", "Classes"], ["testimonials", "Words"], ["questions", "FAQ"]];
+const navLinks = [["curriculum", "Classes"], ["instructor", "Instructor"], ["testimonials", "Words"], ["questions", "FAQ"]];
 
 function useLearnMotion() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const firstSection = document.getElementById(navLinks[0][0]);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 12);
+      if (firstSection && firstSection.getBoundingClientRect().top > window.innerHeight * 0.5) setActive("");
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     const reveal = new IntersectionObserver(entries => entries.forEach(entry => {
@@ -97,8 +101,25 @@ export default function Learn() {
       <div className="learn-company-logos">{companies.map(([name, href, logo]) => <a key={logo} href={href} target="_blank" rel="noreferrer" aria-label={name}><img src={`/learn/logos/${logo}.svg`} alt={name} /></a>)}</div>
     </div>
 
+    <section className="learn-section learn-curriculum" id="curriculum">
+      <div className="learn-wrap">
+        <div className="learn-section-heading learn-heading-row learn-reveal"><div><Eyebrow index="01">The five classes</Eyebrow><h2>One idea.<br /><em>Five steps to shipping it.</em></h2></div><p>Bring an idea you care about. Each class moves it forward, with time between sessions to put the work in.</p></div>
+        <ol className="learn-sessions">{sessions.map((session, index) => <li key={session.title} className="learn-reveal">
+          <div className="learn-session-number">0{index + 1}</div>
+          <div className="learn-session-body"><span className="learn-session-meta">Class {index + 1} · 60 min</span><h3>{session.title}</h3><p>{session.copy}</p><div className="learn-topics">{session.topics.map(topic => <span key={topic}>{topic}</span>)}</div></div>
+          <div className="learn-session-output"><span>You leave with</span><strong>{session.output}</strong></div>
+        </li>)}</ol>
+      </div>
+    </section>
+
+    <section className="learn-section learn-wrap">
+      <div className="learn-section-heading learn-reveal"><Eyebrow index="02">Yours to keep</Eyebrow><h2>The class ends.<br /><em>The work stays yours.</em></h2></div>
+      <div className="learn-takeaways">{takeaways.map(([Icon, title, copy], index) => <div key={title} className="learn-reveal" style={{ ["--d" as string]: `${index * .08}s` }}><span className="learn-icon"><Icon size={20} strokeWidth={1.5} /></span><h3>{title}</h3><p>{copy}</p></div>)}</div>
+      <div className="learn-access-note"><span>Before you enroll</span><p>Recording access, downloadable course resources, and any community access will be confirmed with the final cohort details.</p></div>
+    </section>
+
     <section className="learn-section learn-wrap" id="instructor">
-      <div className="learn-section-heading learn-reveal"><Eyebrow index="01">Your instructor</Eyebrow><h2>Learn from someone<br />who <em>builds for a living.</em></h2></div>
+      <div className="learn-section-heading learn-reveal"><Eyebrow index="03">Your instructor</Eyebrow><h2>Learn from someone<br />who <em>builds for a living.</em></h2></div>
       <div className="learn-instructor-grid learn-reveal">
         <figure className="learn-portrait-frame"><img className="learn-portrait" src="/learn/salil-naik.png" alt="Salil Naik smiling in a brick-lined courtyard" width={960} height={1280} loading="lazy" /><figcaption><span>Salil Naik</span><span>Software engineer · Builder</span></figcaption></figure>
         <div className="learn-instructor-copy">
@@ -109,16 +130,11 @@ export default function Learn() {
             <a href="https://bungee.exchange/" target="_blank" rel="noreferrer"><strong>$40B+</strong><span>Volume processed by Bungee Exchange</span><ArrowUpRight size={16} /></a>
             <div><strong>Polygon <em>&amp;</em> OpenSea Pro</strong><span>Products that have used my work</span></div>
           </div>
+          <div className="learn-award">
+            <span className="learn-award-frame"><img src="/learn/awwwards-mobile-excellence.jpg" alt="Awwwards and Google Mobile Excellence certificate for the TEDxGEC website, 2019" width={1100} height={1460} loading="lazy" /></span>
+            <span className="learn-award-copy"><span>Awwwards <em>×</em> Google · 2019</span><strong>Mobile Excellence Award</strong><span>For the TEDxGEC website I built — mobile friendliness, performance, and usability.</span></span>
+          </div>
           <a className="learn-inline-link" href="/">More about me <ArrowUpRight size={15} /></a>
-        </div>
-      </div>
-      <div className="learn-recognition">
-        <div className="learn-frame-stage"><figure className="learn-frame"><div className="learn-frame-mat"><img src="/learn/awwwards-mobile-excellence.jpg" alt="Awwwards and Google Mobile Excellence certificate awarded to the TEDxGEC website by Salil Naik, February 13, 2019" width={1100} height={1460} loading="lazy" /></div></figure></div>
-        <div className="learn-recognition-copy learn-reveal">
-          <Eyebrow>Recognition</Eyebrow>
-          <h3>Awwwards <em>×</em> Google<br />Mobile Excellence Award</h3>
-          <p>Awarded to the TEDxGEC website I built, for scoring highly on mobile friendliness, performance, best practices, and usability.</p>
-          <dl className="learn-recognition-meta"><div><dt>Project</dt><dd>TEDxGEC website</dd></div><div><dt>Awarded</dt><dd>Feb 13, 2019</dd></div><div><dt>By</dt><dd>Awwwards &amp; Google</dd></div></dl>
         </div>
       </div>
       <div className="learn-public-proof">
@@ -130,36 +146,15 @@ export default function Learn() {
           <div className="learn-native-tweet-footer"><time dateTime={post.date}>{formatDate(post.date)}</time><span>View on X <ArrowUpRight size={13} /></span></div>
         </a>)}</div>
       </div>
-      <div className="learn-video-preview learn-reveal">
-        <div className="learn-video-art"><span className="learn-play"><Play size={20} fill="currentColor" /></span><span>Intro video · coming soon</span></div>
-        <div><Eyebrow>A note from Salil</Eyebrow><h3>The course, <em>in my own words.</em></h3><p>A space for a short introduction: who this is for, how we’ll learn, and what we’ll build together.</p></div>
-      </div>
     </section>
 
     <section className="learn-section learn-wrap" id="testimonials">
-      <div className="learn-section-heading learn-reveal"><Eyebrow index="02">Words from others</Eyebrow><h2>From people I’ve helped<br /><em>and worked with.</em></h2></div>
+      <div className="learn-section-heading learn-reveal"><Eyebrow index="04">Words from others</Eyebrow><h2>From people I’ve helped<br /><em>and worked with.</em></h2></div>
       <div className="learn-testimonial-grid">{testimonials.map(review => <a className="learn-native-tweet learn-testimonial-tweet learn-reveal" key={review.id} href={`https://x.com/${review.handle}/status/${review.id}`} target="_blank" rel="noreferrer">
         <span className="learn-quote-mark" aria-hidden="true">“</span>
         <p className="learn-tweet-text">{review.text}</p>
         <div className="learn-tweet-profile"><img src={review.avatar} alt="" loading="lazy" /><div><strong>{review.name}{review.verified && <span className="learn-verified" aria-label="Verified account">✓</span>}</strong><span>@{review.handle} · {formatDate(review.date)}</span></div><span className="learn-x-mark" aria-label="Read on X"><ArrowUpRight size={16} /></span></div>
       </a>)}</div>
-    </section>
-
-    <section className="learn-section learn-curriculum" id="curriculum">
-      <div className="learn-wrap">
-        <div className="learn-section-heading learn-heading-row learn-reveal"><div><Eyebrow index="03">The five classes</Eyebrow><h2>One idea.<br /><em>Five steps to shipping it.</em></h2></div><p>Bring an idea you care about. Each class moves it forward, with time between sessions to put the work in.</p></div>
-        <ol className="learn-sessions">{sessions.map((session, index) => <li key={session.title} className="learn-reveal">
-          <div className="learn-session-number">0{index + 1}</div>
-          <div className="learn-session-body"><span className="learn-session-meta">Class {index + 1} · 60 min</span><h3>{session.title}</h3><p>{session.copy}</p><div className="learn-topics">{session.topics.map(topic => <span key={topic}>{topic}</span>)}</div></div>
-          <div className="learn-session-output"><span>You leave with</span><strong>{session.output}</strong></div>
-        </li>)}</ol>
-      </div>
-    </section>
-
-    <section className="learn-section learn-wrap">
-      <div className="learn-section-heading learn-reveal"><Eyebrow index="04">Yours to keep</Eyebrow><h2>The class ends.<br /><em>The work stays yours.</em></h2></div>
-      <div className="learn-takeaways">{takeaways.map(([Icon, title, copy], index) => <div key={title} className="learn-reveal" style={{ ["--d" as string]: `${index * .08}s` }}><span className="learn-icon"><Icon size={20} strokeWidth={1.5} /></span><h3>{title}</h3><p>{copy}</p></div>)}</div>
-      <div className="learn-access-note"><span>Before you enroll</span><p>Recording access, downloadable course resources, and any community access will be confirmed with the final cohort details.</p></div>
     </section>
 
     <section className="learn-section learn-expectations">
