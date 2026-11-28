@@ -30,7 +30,7 @@ export const globalCohort: Cohort = {
 };
 
 export const indiaCohort: Cohort = {
-  start: Date.UTC(2027, 0, 8), // Friday, Jan 8, 2027
+  start: Date.UTC(2026, 11, 10), // Thursday, Dec 10, 2026
   currency: "₹", price: "999", was: "2,499",
   payBy: "by UPI",
   payHelp: "",

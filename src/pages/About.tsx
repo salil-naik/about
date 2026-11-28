@@ -5,7 +5,7 @@ export default function Home() {
     <div>
       <h1 className="text-lg font-bold text-primary mb-8">Salil Naik</h1>
       <div className="text-base text-primary space-y-6">
-        <p>I'm a software engineer based in Goa, India.</p>
+        <p>I'm a software engineer from Goa, India 🌴, now based in Dubai.</p>
         <p>
           As a kid, I wanted to program robots — that's how I first got into
           coding. Even before I knew what JavaScript was, I somehow knew I'd
@@ -13,7 +13,7 @@ export default function Home() {
           just good intuition.
         </p>
         <p>
-          Fast forward to 2025 — I'm living the life younger me dreamed of. And
+          Fast forward to today — I'm living the life younger me dreamed of. And
           yet, I know I've barely scratched the surface.
         </p>
         <p>
@@ -24,9 +24,13 @@ export default function Home() {
           our flagship app.
         </p>
         <p>
+          Outside work, you'll find me running 🏃, working out 💪, or teaching
+          people how to build products.
+        </p>
+        <p>
           Get inside my mind by reading my <TextLink href="/thoughts">thoughts</TextLink>. You can also follow me on{" "}
           <TextLink href="https://github.com/salil-naik">GitHub</TextLink> and{" "}
-          <TextLink href="https://x.com/0xSalilNaik">Twitter</TextLink>
+          <TextLink href="https://x.com/0xSalilNaik">X</TextLink>.
         </p>
       </div>
     </div>
