@@ -45,6 +45,28 @@ try {
   assert.equal((await request('POST','invalid')).status,400);
   assert.equal((await request('POST','{}','text/plain')).status,403);
   assert.equal((await request('POST','x'.repeat(8193))).status,413);
+  // The two public pages must forward through separate server configurations.
+  await build({entryPoints:['api/interest.ts','api/course-interest.ts'],outdir:temp,bundle:true,platform:'node',format:'esm',outExtension:{'.js':'.mjs'}});
+  const destinations=[];
+  const originalFetch=globalThis.fetch;
+  globalThis.fetch=async (url)=>{destinations.push(String(url));return Response.json({ok:true});};
+  try {
+    process.env.WAITLIST_SITE_URL='https://learn.chatgpt.site';
+    process.env.WAITLIST_SITES_TOKEN='learn-token';
+    process.env.WAITLIST_WRITE_KEY='learn-key';
+    process.env.COURSE_WAITLIST_SITE_URL='https://course.chatgpt.site';
+    process.env.COURSE_WAITLIST_SITES_TOKEN='course-token';
+    process.env.COURSE_WAITLIST_WRITE_KEY='course-key';
+    for (const entry of ['interest','course-interest']) {
+      const {default:handler}=await import(pathToFileURL(join(temp,`${entry}.mjs`)));
+      const req=Readable.from([]);req.method='POST';req.headers={'content-type':'application/json'};req.body=valid;
+      let output;const res={statusCode:200,setHeader:()=>{},end:value=>output=JSON.parse(value)};
+      await handler(req,res);
+      assert.equal(res.statusCode,200);
+      assert.equal(output.ok,true);
+    }
+    assert.deepEqual(destinations,['https://learn.chatgpt.site/api/interest','https://course.chatgpt.site/api/interest']);
+  } finally { globalThis.fetch=originalFetch; }
   // Verify the deployed SQL's uniqueness and the API's upsert policy using SQLite.
   const migration=await readFile('services/learn-waitlist/drizzle/0000_good_wallflower.sql','utf8');
   const addWhatsapp=await readFile('services/learn-waitlist/drizzle/0001_little_blur.sql','utf8');
@@ -57,5 +79,5 @@ assert c.execute('SELECT count(*),name,created_at,updated_at FROM interests').fe
 assert c.execute('SELECT whatsapp FROM interests').fetchone()==(None,)
 `],{input:migration+'\n'+addWhatsapp,encoding:'utf8'});
   assert.equal(sqlite.status,0,sqlite.stderr);
-  console.log('Waitlist checks passed: validation, private forwarding, save acknowledgments, failure handling, request limits, and duplicate-email storage.');
+  console.log('Waitlist checks passed: validation, separate Learn/Course forwarding, save acknowledgments, failure handling, request limits, and duplicate-email storage.');
 } finally { await rm(temp,{recursive:true,force:true}); }

@@ -40,3 +40,4 @@ yarn-error.log*
 
 # Independent Sites source checkout (published in its own repository)
 /services/learn-waitlist/
+/services/course-waitlist/

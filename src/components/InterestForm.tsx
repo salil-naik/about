@@ -1,12 +1,12 @@
 import { useState, type FormEvent } from "react";
-export default function InterestForm({ phonePlaceholder = "+1 555 123 4567" }: { phonePlaceholder?: string }) {
+export default function InterestForm({ phonePlaceholder = "+1 555 123 4567", endpoint = "/api/interest" }: { phonePlaceholder?: string; endpoint?: string }) {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [error, setError] = useState("");
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setStatus("sending"); setError("");
     const form = event.currentTarget;
     try {
-      const response = await fetch("/api/interest", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form).entries())) });
+      const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form).entries())) });
       if (response.headers.get("content-type")?.includes("application/json") !== true) throw new Error("The interest list is not connected yet. Please check back soon.");
       const result = await response.json();
       if (!response.ok || result.ok !== true) throw new Error(result.error || "Something went wrong. Please try again.");

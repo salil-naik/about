@@ -239,7 +239,7 @@ export function LearnPage({ c }: { c: Cohort }) {
     <section className="learn-section learn-interest" id="interest">
       <div className="learn-wrap learn-interest-grid">
         <div><span className="learn-badge"><span className="learn-dot" /> Introductory cohort · {dates}</span><h2>Your idea deserves<br /><em>a first version.</em></h2><p>Fourteen days, five live classes, one product you ship. Join the waitlist for the schedule and enrollment details. Attend the first two classes free, then decide whether to continue.</p><div className="learn-interest-facts"><span>{dates}</span><span>First 2 classes free</span><span>{priceText} <s>{wasText}</s> to continue</span><span>No payment today</span></div></div>
-        <div className="learn-reveal" style={{ ["--d" as string]: ".1s" }}><InterestForm phonePlaceholder={c.phonePlaceholder} /></div>
+        <div className="learn-reveal" style={{ ["--d" as string]: ".1s" }}><InterestForm phonePlaceholder={c.phonePlaceholder} endpoint={c === indiaCohort ? "/api/course-interest" : "/api/interest"} /></div>
       </div>
     </section>
     <footer className="learn-footer learn-wrap"><a className="learn-brand" href="/"><span>Learn <em>with</em> Salil</span></a><span>14 Days of Product Engineering · Introductory cohort {dates}</span><a href="#top">Back to top ↑</a></footer>

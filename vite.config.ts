@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "node:path";
 
 export default defineConfig(({ mode }) => {
-  const env = { ...loadEnv(mode, process.cwd(), "WAITLIST_"), ...process.env };
+  const env = { ...loadEnv(mode, process.cwd(), ""), ...process.env };
   return {
   plugins: [
     react(),
@@ -13,6 +13,14 @@ export default defineConfig(({ mode }) => {
       configureServer(server) {
         server.middlewares.use("/api/interest", (req, res) => {
           void handleInterest(req, res, { url: env.WAITLIST_SITE_URL, serviceToken: env.WAITLIST_SITES_TOKEN, writeKey: env.WAITLIST_WRITE_KEY });
+        });
+      },
+    },
+    {
+      name: "course-waitlist-api",
+      configureServer(server) {
+        server.middlewares.use("/api/course-interest", (req, res) => {
+          void handleInterest(req, res, { url: env.COURSE_WAITLIST_SITE_URL, serviceToken: env.COURSE_WAITLIST_SITES_TOKEN, writeKey: env.COURSE_WAITLIST_WRITE_KEY });
         });
       },
     },
